@@ -5,11 +5,18 @@
   "author": "Pei-Yao Hung",
   "license": "MIT",
   "scripts": {
-    "dev": "ts-node-dev --respawn --pretty --transpile-only ./src/index.ts",
+    "dev": "ts-node-dev --respawn --pretty --transpile-only ./src/main.ts",
     "test": "ts-node-dev --respawn --pretty --transpile-only ./src/tests/testrunner.ts"
   },
   "devDependencies": {
     "ts-node-dev": "^2.0.0",
     "typescript": "^4.8.2"
+  },
+  "dependencies": {
+    "@types/mongoose": "^5.11.97",
+    "@types/node": "^18.7.13",
+    "dotenv": "^16.0.1",
+    "mongodb": "^4.9.0",
+    "mongoose": "^6.5.3"
   }
 }
