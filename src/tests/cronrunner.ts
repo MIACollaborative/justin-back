@@ -28,7 +28,7 @@ async function doTests() {
     await loadTestTriggers();
 
 
-    let theExpression = expressionLabelDict["10 seconds"];
+    let theExpression = expressionLabelDict["1 minute"];
 
 
     nodeCron.schedule(theExpression.expression, async () => {
@@ -37,7 +37,8 @@ async function doTests() {
 
 
         let t1 = process.hrtime();
-        await doTick(new Date(2022, 7, 26, 16, 33, 30));
+        //await doTick(new Date(2022, 7, 26, 17, 1, 0));
+        await doTick(new Date());
         let t2 = process.hrtime();
         console.log('did tick in', (t2[1] - t1[1]) / 1000000, 'ms');
     });

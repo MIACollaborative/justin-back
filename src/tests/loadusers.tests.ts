@@ -58,9 +58,12 @@ userState['semanticLocation'] = {
 
 
 const testUsers = [
+    new User('Pei-Yao Hung', 'peiyaoh@umich.edu', '543'),
+    /*
     new User('Mark Newman', 'mwnewman@umich.edu', '123', studyParams, userPrefs, userState),
     new User('Pedja Klasnja', 'klasnja@umich.edu', '234'),
     new User('Patrick Neggie', 'patmn@umich.edu', '345'),
+    */
 ]
 
 export async function loadTestUsers() {
