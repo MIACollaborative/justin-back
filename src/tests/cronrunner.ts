@@ -37,7 +37,7 @@ async function doTests() {
 
 
         let t1 = process.hrtime();
-        await doTick(new Date(1972, 2, 2, 8, 0));
+        await doTick(new Date(2022, 7, 26, 16, 33, 30));
         let t2 = process.hrtime();
         console.log('did tick in', (t2[1] - t1[1]) / 1000000, 'ms');
     });

@@ -1,7 +1,7 @@
 
 import { promises as fsp } from 'fs';
 
-const LOG_FILENAME = 'justin.log'
+const LOG_FILENAME = './output/justin.log'
 
 export async function writeLogMessage(message: string) {
     try {

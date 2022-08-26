@@ -12,13 +12,19 @@ dotenv.config();
 export async function doTick(curTime: Date) { 
     let users = await userService.getAllUsers();
     let triggers = await configService.getTriggers();
+    console.log(`triggers: ${triggers}`);
     let decisionRecord: DecisionRecord;
     console.log('doing tick at', curTime);
     for (let u of users) {
         u = u as User;
         for (let t of triggers) {
             console.log('running trigger', t, 'for user', u.getName());
-            if (!t.shouldRun(u, curTime)) continue; // next trigger
+            
+            let shouldRunResult = t.shouldRun(u, curTime);
+            console.log('[Trigger] ', t, '.shouldRun()', shouldRunResult);
+
+            if (!shouldRunResult) continue; // next trigger
+
             let diceRoll = Math.random();
             console.log('dice role:', diceRoll);
             if (diceRoll < t.getProbability(u, curTime)) {
