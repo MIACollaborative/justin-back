@@ -15,6 +15,10 @@ export default class FixedTimePrefTrigger implements ITrigger {
     }
 
     shouldRun(user: User, curTime: Date): boolean {
+
+        let targetTimeString = "06:00 PM";
+        
+
         let prefs: MessageTimePrefs | undefined = 
             user.getPrefs(MessageTimePrefs.KEY) as MessageTimePrefs;
         let messageTimePrefs: MessageTimePrefs = 
