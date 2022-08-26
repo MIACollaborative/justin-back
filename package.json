@@ -6,7 +6,8 @@
   "license": "MIT",
   "scripts": {
     "dev": "ts-node-dev --respawn --pretty --transpile-only ./src/main.ts",
-    "test": "ts-node-dev --respawn --pretty --transpile-only ./src/tests/testrunner.ts"
+    "test": "ts-node-dev --respawn --pretty --transpile-only ./src/tests/testrunner.ts",
+    "cron": "ts-node-dev --respawn --pretty --transpile-only ./src/tests/cronrunner.ts"
   },
   "devDependencies": {
     "ts-node-dev": "^2.0.0",
@@ -16,7 +17,9 @@
     "@types/mongoose": "^5.11.97",
     "@types/node": "^18.7.13",
     "dotenv": "^16.0.1",
+    "luxon": "^3.0.1",
     "mongodb": "^4.9.0",
-    "mongoose": "^6.5.3"
+    "mongoose": "^6.5.3",
+    "node-cron": "^3.0.2"
   }
 }
