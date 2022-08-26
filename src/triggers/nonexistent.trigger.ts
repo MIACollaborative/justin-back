@@ -7,9 +7,9 @@ import { MessageTimePrefs } from '../dataModels/prefs/messageTimePrefs.model';
 import { selectMessage } from '../actions/selectmessage.action';
 import GeneralUtility from '../utilities/generalutilities';
 
-export default class FixedTimePrefTrigger implements ITrigger {
+export default class NonExistentTrigger implements ITrigger {
 
-    name: string = "FixedTimePrefTrigger";
+    name: string = "NonExistentTrigger";
 
     getName(): string {
         return this.name;
@@ -17,17 +17,7 @@ export default class FixedTimePrefTrigger implements ITrigger {
 
     shouldRun(user: User, curTime: Date): boolean {
 
-        let targetTimeString = "04:33 PM";
-
-        // assuming this is the user timezone
-        let userTimezoneString = "America/New_York";
-        let targetTime = GeneralUtility.initializeDateWithHourMinuteString(targetTimeString, userTimezoneString);
-
-        // see if I need to sync the rest
-
-        let result = GeneralUtility.areDatesMatchedUpByGranularity(curTime, targetTime, "minute");
-
-        return result;
+        return false;
     }
 
     getProbability(user: User, curTime: Date): number {
@@ -36,11 +26,6 @@ export default class FixedTimePrefTrigger implements ITrigger {
 
     doAction(user: User, curTime: Date): DecisionRecord {
         let message: string = selectMessage(user, curTime).text;
-        writeLogMessage(message).then(() => {
-            // not sure what to do here.
-            // the action should log it's own errors, not the trigger.
-            // the trigger is "fire and forget" perhaps.
-        }); 
         console.log('did action, message:', message);
         return new DecisionRecord(user, this.name, { message: message }, curTime);
     }
