@@ -13,7 +13,6 @@ export interface ITriggerCondition {
 
     // dont' require it for now
     //fromSpec(spec:Object):ITriggerCondition;
-    
 }
 
 export interface ITriggerConditionStatic {
