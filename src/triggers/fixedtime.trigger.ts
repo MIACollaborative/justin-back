@@ -1,23 +1,17 @@
 
-import { DecisionRecord } from '../models/decisionrecord.model';
 import { User } from '../models/user.model';
 import { ITrigger } from '../models/trigger.interface';
 import { writeLogMessage } from '../actions/logwriter.action';
-import { MessageTimePrefs } from '../dataModels/prefs/messageTimePrefs.model';
-import { selectMessage } from '../actions/selectmessage.action';
-import GeneralUtility from '../utilities/generalutilities';
-
-import { createDesktopNotification } from '../actions/desktopnotification.action';
 import { TriggerRecord } from '../models/triggerrecord.model';
 import { GenericRecord } from '../models/genericrecord.model';
 import FixedTimeTriggerCondition from '../conditions/fixedtime.triggercondition';
 import { NoActionDecisionRecord } from '../models/noaction.decisionrecord';
+import DesktopNotificationAction from '../actions/desktopnotification.action';
 
 export default class FixedTimeTrigger implements ITrigger {
 
     name: string = "FixedTimeTrigger";
-
-
+    
     // private members
     #shouldRunRecord: GenericRecord;
     #probabilityRecord: GenericRecord;
@@ -61,8 +55,6 @@ export default class FixedTimeTrigger implements ITrigger {
 
     }
 
-    
-
     async shouldRun(user: User, curTime: Date): Promise<GenericRecord> {
 
         // use TriggerCondition
@@ -92,12 +84,20 @@ export default class FixedTimeTrigger implements ITrigger {
 
     async doAction(user: User, curTime: Date): Promise<GenericRecord> {
         console.log('[Trigger] ', this.getName(), '.doAction()');
+        
+        let title = `[${this.getName()}]`;
+        let message: string = `Hi ${user.getName()}. It's ${this.#shouldRunRecord["record"]["targetTimeString"]}`;
+        
+        let aAction = new DesktopNotificationAction({
+            title: title,
+            message: message
+        });
 
         //let message: string = selectMessage(user, curTime).text;
+        //let actionResult = await createDesktopNotification(`[${this.getName()}]`, message);
 
-        let message: string = `Hi ${user.getName()}. It's ${this.#shouldRunRecord["record"]["targetTimeString"]}`;
 
-        let actionResult = await createDesktopNotification(`[${this.getName()}]`, message);
+        let actionResultRecord = await aAction.execute(user, curTime);
 
         writeLogMessage(message).then(() => {
             // not sure what to do here.
@@ -106,7 +106,7 @@ export default class FixedTimeTrigger implements ITrigger {
         }); 
         console.log('did action, message:', message);
 
-        return new GenericRecord({ message: message, result: actionResult }, curTime);
+        return actionResultRecord;
     }
 
     generateRecord(user: User, curTime: Date, shouldRunRecord:GenericRecord, probabilityRecord?:GenericRecord, actionRecord?:GenericRecord):TriggerRecord{

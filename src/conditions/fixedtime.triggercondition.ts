@@ -5,15 +5,6 @@ import { ITriggerCondition } from '../models/triggercondition.interface';
 import GeneralUtility from '../utilities/generalutilities';
 
 
-import { DecisionRecord } from '../models/decisionrecord.model';
-import { ITrigger } from '../models/trigger.interface';
-import { writeLogMessage } from '../actions/logwriter.action';
-import { MessageTimePrefs } from '../dataModels/prefs/messageTimePrefs.model';
-import { selectMessage } from '../actions/selectmessage.action';
-import { createDesktopNotification } from '../actions/desktopnotification.action';
-import { TriggerRecord } from '../models/triggerrecord.model';
-
-
 // implements ITriggerCondition
 /*
 function staticImplements<T>() {
