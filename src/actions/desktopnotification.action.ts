@@ -20,7 +20,7 @@ export default class DesktopNotificationAction implements IAction {
   }
 
   async execute(user: User, curTime: Date): Promise<GenericRecord> {
-      console.log(`[Condition]`, this.getName(), `curTime`, curTime);
+      console.log(`[Action]`, this.getName(), `curTime`, curTime);
 
       let result = await notifier.notify(
         {
@@ -55,13 +55,3 @@ export default class DesktopNotificationAction implements IAction {
   */
 
 }
-
-/*
-export async function createDesktopNotification(title:string, message:string) {
-    console.log(`createDesktopNotification: ${title}, ${message}`);
-
-    
-}
-*/
-
-
