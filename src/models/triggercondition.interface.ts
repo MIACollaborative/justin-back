@@ -8,13 +8,12 @@ export interface ITriggerCondition {
     name: string;
     
     // public, expected to be called
-    check(user: User, curTime: Date):GenericRecord;
+    check(user: User, curTime: Date):Promise<GenericRecord>;
+    getName(): string;
 
     // dont' require it for now
     //fromSpec(spec:Object):ITriggerCondition;
-
-    getName(): string;
-
+    
 }
 
 export interface ITriggerConditionStatic {

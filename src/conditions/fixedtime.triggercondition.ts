@@ -1,16 +1,18 @@
 
-import { DecisionRecord } from '../models/decisionrecord.model';
 import { User } from '../models/user.model';
+import { GenericRecord } from '../models/genericrecord.model';
+import { ITriggerCondition } from '../models/triggercondition.interface';
+import GeneralUtility from '../utilities/generalutilities';
+
+
+import { DecisionRecord } from '../models/decisionrecord.model';
 import { ITrigger } from '../models/trigger.interface';
 import { writeLogMessage } from '../actions/logwriter.action';
 import { MessageTimePrefs } from '../dataModels/prefs/messageTimePrefs.model';
 import { selectMessage } from '../actions/selectmessage.action';
-import GeneralUtility from '../utilities/generalutilities';
-
 import { createDesktopNotification } from '../actions/desktopnotification.action';
 import { TriggerRecord } from '../models/triggerrecord.model';
-import { GenericRecord } from '../models/genericrecord.model';
-import { ITriggerCondition, ITriggerConditionStatic } from '../models/triggercondition.interface';
+
 
 // implements ITriggerCondition
 
@@ -34,7 +36,7 @@ export default class FixedTimeTriggerCondition implements ITriggerCondition {
         return this.name;
     }
 
-    check(user: User, curTime: Date): GenericRecord {
+    async check(user: User, curTime: Date): Promise<GenericRecord> {
         console.log(`[Condition]`, this.getName(), `targetTimeString`, this.targetTimeString);
 
         // assuming this is the user timezone
@@ -43,7 +45,7 @@ export default class FixedTimeTriggerCondition implements ITriggerCondition {
         let targetTime = GeneralUtility.initializeDateWithHourMinuteString(this.targetTimeString, userTimezoneString);
         let result = GeneralUtility.areDatesMatchedUpByGranularity(curTime, targetTime, "minute");
 
-        return this.generateRecord({value: result}, curTime);
+        return this.generateRecord({value: result, targetTimeString: this.targetTimeString}, curTime);
     }
 
     generateRecord( recordObj:Object, curTime: Date):GenericRecord{

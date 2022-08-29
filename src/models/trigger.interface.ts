@@ -12,8 +12,8 @@ export interface ITrigger {
     getName(): string;
 
     // public, but only get called if further customization is needed
-    shouldRun(user: User, curTime: Date): GenericRecord; //: boolean; 
-    getProbability(user: User, curTime: Date): number;
+    shouldRun(user: User, curTime: Date): Promise<GenericRecord>; //: boolean; 
+    getProbability(user: User, curTime: Date): Promise<GenericRecord>; //: number
     doAction(user: User, curTime: Date): Promise<GenericRecord>; // for now
 
     // public? but do not expect to be called in usual cases. Will be called 
