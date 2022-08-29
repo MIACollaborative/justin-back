@@ -8,38 +8,96 @@ import { selectMessage } from '../actions/selectmessage.action';
 import GeneralUtility from '../utilities/generalutilities';
 
 import { createDesktopNotification } from '../actions/desktopnotification.action';
+import { TriggerRecord } from '../models/triggerrecord.model';
+import { GenericRecord } from '../models/genericrecord.model';
+import FixedTimeTriggerCondition from '../conditions/fixedtime.triggercondition';
+import { NoActionDecisionRecord } from '../models/noaction.decisionrecord';
 
-export default class FixedTimePrefTrigger implements ITrigger {
+export default class FixedTimeTrigger implements ITrigger {
 
-    name: string = "FixedTimePrefTrigger";
-    targetTimeString: string = "05:08 PM";
+    name: string = "FixedTimeTrigger";
+
+
+    // private members
+    #shouldRunRecord: GenericRecord;
+    #probabilityRecord: GenericRecord;
+    #actionRecord: GenericRecord;
+
 
     getName(): string {
         return this.name;
     }
 
-    shouldRun(user: User, curTime: Date): boolean {
+    async execute(user: User, curTime: Date): Promise<TriggerRecord>{
+        console.log('[Trigger] ', this.getName(), '.execute()', curTime);
+
+        this.#shouldRunRecord = await this.shouldRun(user, curTime);
+
+        console.log('[Trigger] ', this.getName(), '.shouldRun()', JSON.stringify(this.#shouldRunRecord.record));
+
+        if (!this.#shouldRunRecord["record"]["value"]){
+            return this.generateRecord(user, curTime, this.#shouldRunRecord);
+        }
+
+        let diceRoll = Math.random();
+        console.log('dice role:', diceRoll);
+
+        let probabilityGot = await this.getProbability(user, curTime);
+
+        console.log('probabilityGot:', JSON.stringify(probabilityGot, null, 2));
+
+        let probability = probabilityGot["record"]["value"];
+
+        this.#probabilityRecord = new GenericRecord({value: diceRoll, probability: probability}, curTime);
+
+        if (diceRoll < probability) {
+            this.#actionRecord = await this.doAction(user, curTime);
+        } else {
+            this.#actionRecord = new NoActionDecisionRecord(user, this.getName(), curTime);
+            console.log('no action, record:', this.#actionRecord);
+        }
+
+        return this.generateRecord(user, curTime, this.#shouldRunRecord, this.#probabilityRecord, this.#actionRecord);
+
+    }
+
+    
+
+    async shouldRun(user: User, curTime: Date): Promise<GenericRecord> {
+
+        // use TriggerCondition
+        let tCondition = FixedTimeTriggerCondition.fromSpec({targetTimeString: "12:12 PM"});
+        let resultRecord = await tCondition.check(user, curTime);
+
+        return resultRecord;
 
 
+        // Without Condition
+        /*
         // assuming this is the user timezone
+        
         let userTimezoneString = "America/New_York";
         let targetTime = GeneralUtility.initializeDateWithHourMinuteString(this.targetTimeString, userTimezoneString);
 
         // see if I need to sync the rest
 
         let result = GeneralUtility.areDatesMatchedUpByGranularity(curTime, targetTime, "minute");
-
         return result;
+        */
     }
 
-    getProbability(user: User, curTime: Date): number {
-        return 1.0;
+    async getProbability(user: User, curTime: Date): Promise<GenericRecord> {
+        return new GenericRecord({ value: 1.0 }, curTime);
     }
 
-    doAction(user: User, curTime: Date): DecisionRecord {
-        let message: string = selectMessage(user, curTime).text;
+    async doAction(user: User, curTime: Date): Promise<GenericRecord> {
+        console.log('[Trigger] ', this.getName(), '.doAction()');
 
-        createDesktopNotification(`[${this.getName()}]`, `Hi ${user.getName()}, it's time: ${this.targetTimeString}.`);
+        //let message: string = selectMessage(user, curTime).text;
+
+        let message: string = `Hi ${user.getName()}. It's ${this.#shouldRunRecord["record"]["targetTimeString"]}`;
+
+        let actionResult = await createDesktopNotification(`[${this.getName()}]`, message);
 
         writeLogMessage(message).then(() => {
             // not sure what to do here.
@@ -47,7 +105,17 @@ export default class FixedTimePrefTrigger implements ITrigger {
             // the trigger is "fire and forget" perhaps.
         }); 
         console.log('did action, message:', message);
-        return new DecisionRecord(user, this.name, { message: message }, curTime);
+
+        return new GenericRecord({ message: message, result: actionResult }, curTime);
+    }
+
+    generateRecord(user: User, curTime: Date, shouldRunRecord:GenericRecord, probabilityRecord?:GenericRecord, actionRecord?:GenericRecord):TriggerRecord{
+        let recordObj = {
+            shouldRunRecord: shouldRunRecord,
+            probabilityRecord: probabilityRecord,
+            actionReord: actionRecord
+        };
+        return new TriggerRecord(user, this.getName(), recordObj, curTime);
     }
 
 }

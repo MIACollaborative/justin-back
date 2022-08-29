@@ -10,10 +10,11 @@ async function doTests() {
     
     // morning time for user1
     let t1 = process.hrtime();
-    await doTick(new Date(1972, 2, 2, 8, 0));
+    await doTick(new Date(2022, 7, 29, 12, 12, 0));
     let t2 = process.hrtime();
     console.log('did tick in', (t2[1] - t1[1]) / 1000000, 'ms');
 
+    /*
     // no action
     t1 = process.hrtime();
     await doTick(new Date(1972, 2, 2, 8, 30));
@@ -25,6 +26,7 @@ async function doTests() {
     await doTick(new Date(1972, 2, 2, 18, 0));
     t2 = process.hrtime();
     console.log('did tick in', (t2[1] - t1[1]) / 1000000, 'ms');
+    */
 
 }
 
