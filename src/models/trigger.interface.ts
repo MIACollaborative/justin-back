@@ -1,11 +1,21 @@
 
 import { User } from './user.model';
+import { TriggerRecord } from './triggerrecord.model';
 import { DecisionRecord } from './decisionrecord.model';
+import { GenericRecord } from './genericrecord.model';
 
 export interface ITrigger {
     name: string;
+    
+    // public, expected to be called
+    execute(user: User, curTime: Date): Promise<TriggerRecord>;
     getName(): string;
-    shouldRun(user: User, curTime: Date): boolean; 
+
+    // public, but only get called if further customization is needed
+    shouldRun(user: User, curTime: Date): GenericRecord; //: boolean; 
     getProbability(user: User, curTime: Date): number;
-    doAction(user: User, curTime: Date): DecisionRecord;
+    doAction(user: User, curTime: Date): Promise<GenericRecord>; // for now
+
+    // public? but do not expect to be called in usual cases. Will be called 
+    //generateRecord():TriggerRecord;
 }

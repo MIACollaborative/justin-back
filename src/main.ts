@@ -5,6 +5,7 @@ import { NoActionDecisionRecord } from './models/noaction.decisionrecord';
 import { User } from './models/user.model';
 import { DecisionRecord } from './models/decisionrecord.model';
 import { addDecisionRecord } from './db/decisionrecords.service';
+import { addTriggerRecord } from './db/triggerrecords.service';
 
 dotenv.config();
 
@@ -18,8 +19,16 @@ export async function doTick(curTime: Date) {
     for (let u of users) {
         u = u as User;
         for (let t of triggers) {
-            console.log('running trigger', t, 'for user', u.getName());
+            console.log('running trigger', t.getName(), 'for user', u.getName());
+
+            let tRecord = await t.execute(u, curTime);
+            addTriggerRecord(tRecord);
+
+            console.log('ran trigger', t.getName(), 'for user', u.getName(), ':', JSON.stringify(tRecord, null, 2));
+
             
+            // before revision, 2022.08.28
+            /*
             let shouldRunResult = t.shouldRun(u, curTime);
             console.log('[Trigger] ', t, '.shouldRun()', shouldRunResult);
 
@@ -35,6 +44,8 @@ export async function doTick(curTime: Date) {
             }
             addDecisionRecord(decisionRecord);
             console.log('ran trigger', t, 'for user', u.getName(), ':', decisionRecord);
+            */
+            
         }
     }
 }

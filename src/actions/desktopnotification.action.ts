@@ -4,7 +4,7 @@ import notifier from "node-notifier";
 export async function createDesktopNotification(title:string, message:string) {
     console.log(`createDesktopNotification: ${title}, ${message}`);
 
-    notifier.notify(
+    return notifier.notify(
       {
         title: title,
         message: message,
@@ -12,8 +12,9 @@ export async function createDesktopNotification(title:string, message:string) {
         sound: false, // Only Notification Center or Windows Toasters
         wait: true // Wait with callback, until user action is taken against notification
       },
-      function(err, response) {
+      function(err, response, metadata) {
         // Response is response from notification
+        return {err, response, metadata};
       }
     );
   }
