@@ -12,7 +12,7 @@ export async function createDesktopNotification(title:string, message:string) {
         sound: false, // Only Notification Center or Windows Toasters
         wait: true // Wait with callback, until user action is taken against notification
       },
-      function(err, response, metadata) {
+      (err, response, metadata) => {
         // Response is response from notification
         return {err, response, metadata};
       }

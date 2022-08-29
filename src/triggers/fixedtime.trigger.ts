@@ -13,9 +13,9 @@ import { GenericRecord } from '../models/genericrecord.model';
 import FixedTimeTriggerCondition from '../conditions/fixedtime.triggercondition';
 import { NoActionDecisionRecord } from '../models/noaction.decisionrecord';
 
-export default class FixedTimePrefTrigger implements ITrigger {
+export default class FixedTimeTrigger implements ITrigger {
 
-    name: string = "FixedTimePrefTrigger";
+    name: string = "FixedTimeTrigger";
 
 
     // private members
@@ -41,11 +41,14 @@ export default class FixedTimePrefTrigger implements ITrigger {
 
         let diceRoll = Math.random();
         console.log('dice role:', diceRoll);
-        let probability = await this.getProbability(user, curTime)["record"]["value"];
+
+        let probabilityGot = await this.getProbability(user, curTime);
+
+        console.log('probabilityGot:', JSON.stringify(probabilityGot, null, 2));
+
+        let probability = probabilityGot["record"]["value"];
 
         this.#probabilityRecord = new GenericRecord({value: diceRoll, probability: probability}, curTime);
-
-        
 
         if (diceRoll < probability) {
             this.#actionRecord = await this.doAction(user, curTime);
@@ -83,7 +86,7 @@ export default class FixedTimePrefTrigger implements ITrigger {
         */
     }
 
-    getProbability(user: User, curTime: Date): Promise<GenericRecord> {
+    async getProbability(user: User, curTime: Date): Promise<GenericRecord> {
         return new GenericRecord({ value: 1.0 }, curTime);
     }
 
@@ -109,7 +112,7 @@ export default class FixedTimePrefTrigger implements ITrigger {
     generateRecord(user: User, curTime: Date, shouldRunRecord:GenericRecord, probabilityRecord?:GenericRecord, actionRecord?:GenericRecord):TriggerRecord{
         let recordObj = {
             shouldRunRecord: shouldRunRecord,
-            probability: probabilityRecord,
+            probabilityRecord: probabilityRecord,
             actionReord: actionRecord
         };
         return new TriggerRecord(user, this.getName(), recordObj, curTime);
