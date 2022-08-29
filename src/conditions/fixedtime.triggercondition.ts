@@ -15,7 +15,6 @@ import { TriggerRecord } from '../models/triggerrecord.model';
 
 
 // implements ITriggerCondition
-
 /*
 function staticImplements<T>() {
     return <U extends T>(constructor: U) => {constructor};
