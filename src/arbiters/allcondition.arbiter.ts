@@ -1,9 +1,9 @@
-import { User } from "./user.model";
-import { ITrigger } from './trigger.interface';
-import { GenericRecord } from "./genericrecord.model";
-import { GenericEvaluable } from "./genericevaluable.model";
-import { GenericArbiter } from "./genericarbiter.model";
-import { GenericCondition } from "./genericcondition.model";
+import { User } from "../models/user.model";
+import { ITrigger } from '../models/trigger.interface';
+import { GenericRecord } from "../models/genericrecord.model";
+import { GenericEvaluable } from "../models/genericevaluable.model";
+import { GenericArbiter } from "../models/genericarbiter.model";
+import { GenericCondition } from "../models/genericcondition.model";
 import GeneralUtility from "../utilities/generalutilities";
 
 export class AllConditionArbiter extends GenericArbiter {
