@@ -33,50 +33,7 @@ export default class DaysInWeekFixedTimeTrigger implements ITrigger {
         conditionList.push(FixedTimeTriggerCondition.fromSpec({targetTimeString: "12:12 PM"}));
         
         return await new AllConditionArbiter().evaluate(user, curTime, {evaluableList: conditionList});
-
-
-        // version 1: one by one
-        /*
-        // use TriggerCondition
-        let tCondition1 =  DaysInAWeekTriggerCondition.fromSpec({daysInWeekIndexList: [2,4]});
-        let resultRecord1 = await tCondition1.evaluate(user, curTime);
-
-        // use TriggerCondition
-        let tCondition2 = FixedTimeTriggerCondition.fromSpec({targetTimeString: "12:13 PM"});
-        let resultRecord2 = await tCondition2.evaluate(user, curTime);
-
-        // so the problem is, how to make it easier to compose the results of a series of GenericCondition
-        let conditionEvaluationResultList:GenericRecord[] = [];
-        conditionEvaluationResultList.push(resultRecord1);
-        conditionEvaluationResultList.push(resultRecord2);
-
-
-        let result = true;
-        // now, check conditionRelationship to see if it is and/or (all or one)
-
-        let valueList = conditionEvaluationResultList.map((record) => {
-            return record['record']['value'];
-        });
-
-        console.log(`valueList: ${valueList}`);
-
-        result = GeneralUtility.reduceBooleanArray(valueList, "and");
-
-        return new GenericRecord({value: result, recordList: conditionEvaluationResultList}, curTime);
-        */
-
-        // Without Condition
-        /*
-        // assuming this is the user timezone
         
-        let userTimezoneString = "America/New_York";
-        let targetTime = GeneralUtility.initializeDateWithHourMinuteString(this.targetTimeString, userTimezoneString);
-
-        // see if I need to sync the rest
-
-        let result = GeneralUtility.areDatesMatchedUpByGranularity(curTime, targetTime, "minute");
-        return result;
-        */
     }
 
     async getProbability(user: User, curTime: Date): Promise<GenericRecord> {
