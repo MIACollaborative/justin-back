@@ -2,7 +2,7 @@ import { User } from "./user.model";
 import { ITrigger } from './trigger.interface';
 import { GenericRecord } from "./genericrecord.model";
 
-export class DecisionRecord extends GenericRecord{
+export class DecisionRecord extends GenericRecord {
     user: User;
     triggerId: string;
     /*

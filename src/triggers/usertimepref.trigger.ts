@@ -5,23 +5,31 @@ import { ITrigger } from '../models/trigger.interface';
 import { writeLogMessage } from '../actions/logwriter.action';
 import { MessageTimePrefs } from '../dataModels/prefs/messageTimePrefs.model';
 import { selectMessage } from '../actions/selectmessage.action';
+import { GenericRecord } from '../models/genericrecord.model';
+import { TriggerRecord } from '../models/triggerrecord.model';
+import { NoActionDecisionRecord } from '../models/noaction.decisionrecord';
 
 export default class UserTimePrefTrigger implements ITrigger {
 
     name: string = "UserTimePrefTrigger";
 
+    // private members
+    #shouldRunRecord: GenericRecord;
+    #probabilityRecord: GenericRecord;
+    #actionRecord: GenericRecord;
+
     getName(): string {
         return this.name;
     }
 
-    shouldRun(user: User, curTime: Date): boolean {
+    async shouldRun(user: User, curTime: Date): Promise<GenericRecord> {
         let prefs: MessageTimePrefs | undefined = 
             user.getPrefs(MessageTimePrefs.KEY) as MessageTimePrefs;
         let messageTimePrefs: MessageTimePrefs = 
             prefs as MessageTimePrefs;
         if (!messageTimePrefs) {
             console.log('no', MessageTimePrefs.KEY, 'found for', user.getName());
-            return false;
+            return new GenericRecord({value: false}, curTime);
         }
         console.log(messageTimePrefs);
         // TODO: deal with timezones?
@@ -33,17 +41,17 @@ export default class UserTimePrefTrigger implements ITrigger {
             t.setDate(curTime.getDate());
             let diff = t.getTime() - curTime.getTime();
             if (Math.abs(diff) < 1000 * 60) { // within a minute
-                return true;
+                return new GenericRecord({value: true}, curTime);
             }
         }
-        return false; // didn't match
+        return new GenericRecord({value: false}, curTime);
     }
 
-    getProbability(user: User, curTime: Date): number {
-        return 1.0;
+    async getProbability(user: User, curTime: Date): Promise<GenericRecord> {
+        return new GenericRecord({ value: 1.0 }, curTime);
     }
 
-    doAction(user: User, curTime: Date): DecisionRecord {
+    async doAction(user: User, curTime: Date): Promise<GenericRecord> {
         let message: string = selectMessage(user, curTime).text;
         writeLogMessage(message).then(() => {
             // not sure what to do here.
@@ -54,4 +62,45 @@ export default class UserTimePrefTrigger implements ITrigger {
         return new DecisionRecord(user, this.name, { message: message }, curTime);
     }
 
+    async execute(user: User, curTime: Date): Promise<TriggerRecord>{
+        console.log('[Trigger] ', this.getName(), '.execute()', curTime);
+
+        this.#shouldRunRecord = await this.shouldRun(user, curTime);
+
+        console.log('[Trigger] ', this.getName(), '.shouldRun()', JSON.stringify(this.#shouldRunRecord.record));
+
+        if (!this.#shouldRunRecord["record"]["value"]){
+            return this.generateRecord(user, curTime, this.#shouldRunRecord);
+        }
+
+        let diceRoll = Math.random();
+        console.log('dice role:', diceRoll);
+
+        let probabilityGot = await this.getProbability(user, curTime);
+
+        console.log('probabilityGot:', JSON.stringify(probabilityGot, null, 2));
+
+        let probability = probabilityGot["record"]["value"];
+
+        this.#probabilityRecord = new GenericRecord({value: diceRoll, probability: probability}, curTime);
+
+        if (diceRoll < probability) {
+            this.#actionRecord = await this.doAction(user, curTime);
+        } else {
+            this.#actionRecord = new NoActionDecisionRecord(user, this.getName(), curTime);
+            console.log('no action, record:', this.#actionRecord);
+        }
+
+        return this.generateRecord(user, curTime, this.#shouldRunRecord, this.#probabilityRecord, this.#actionRecord);
+
+    }
+
+    generateRecord(user: User, curTime: Date, shouldRunRecord:GenericRecord, probabilityRecord?:GenericRecord, actionRecord?:GenericRecord):TriggerRecord{
+        let recordObj = {
+            shouldRunRecord: shouldRunRecord,
+            probabilityRecord: probabilityRecord,
+            actionReord: actionRecord
+        };
+        return new TriggerRecord(user, this.getName(), recordObj, curTime);
+    }
 }
