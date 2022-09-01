@@ -1,3 +1,1 @@
-import { createDesktopNotification } from "../actions/desktopnotification.action";
-
-createDesktopNotification("[Desktop]", "Hi Pei-Yao!!!");
+//await DesktopNotificationAction.createDesktopNotification("[Desktop]", "Hi Pei-Yao!!!");
