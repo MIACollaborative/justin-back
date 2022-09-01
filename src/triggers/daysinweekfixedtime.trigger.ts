@@ -10,7 +10,7 @@ import DesktopNotificationAction from '../actions/desktopnotification.action';
 import DaysInAWeekTriggerCondition from '../conditions/daysinweek.triggercondition';
 import GeneralUtility from '../utilities/generalutilities';
 import { GenericCondition } from '../models/genericcondition.model';
-import { AllConditionArbiter } from '../models/allcondition.arbiter';
+import { AllConditionArbiter } from '../arbiters/allcondition.arbiter';
 
 export default class DaysInWeekFixedTimeTrigger implements ITrigger {
 
@@ -27,12 +27,11 @@ export default class DaysInWeekFixedTimeTrigger implements ITrigger {
     }
 
     async shouldRun(user: User, curTime: Date): Promise<GenericRecord> {
-
         let conditionList:GenericCondition[] = [];
 
         conditionList.push(DaysInAWeekTriggerCondition.fromSpec({daysInWeekIndexList: [2,4]}));
         conditionList.push(FixedTimeTriggerCondition.fromSpec({targetTimeString: "12:12 PM"}));
-
+        
         return await new AllConditionArbiter().evaluate(user, curTime, {evaluableList: conditionList});
 
 
