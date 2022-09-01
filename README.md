@@ -1,9 +1,9 @@
-# justing-back
+# Justin-Back
 
-Key points
-- Use for backend code
-- Runnable (not just a library)
-- Will gradually extract components
+## Overview
+- Used for creating backend code for several research projects, including MiWaves.
+- Runnable as a backend serverside script (not just a library).
+- Reusable components will be gradually extracted into the form of a library/package.
 
 
 # Example of .env file
