@@ -9,6 +9,8 @@ import { NoActionDecisionRecord } from '../models/noaction.decisionrecord';
 import DesktopNotificationAction from '../actions/desktopnotification.action';
 import DaysInAWeekTriggerCondition from '../conditions/daysinweek.triggercondition';
 import GeneralUtility from '../utilities/generalutilities';
+import { GenericCondition } from '../models/genericcondition.model';
+import { AllConditionArbiter } from '../models/allcondition.arbiter';
 
 export default class DaysInWeekFixedTimeTrigger implements ITrigger {
 
@@ -26,6 +28,16 @@ export default class DaysInWeekFixedTimeTrigger implements ITrigger {
 
     async shouldRun(user: User, curTime: Date): Promise<GenericRecord> {
 
+        let conditionList:GenericCondition[] = [];
+
+        conditionList.push(DaysInAWeekTriggerCondition.fromSpec({daysInWeekIndexList: [2,4]}));
+        conditionList.push(FixedTimeTriggerCondition.fromSpec({targetTimeString: "12:12 PM"}));
+
+        return await new AllConditionArbiter().evaluate(user, curTime, {evaluableList: conditionList});
+
+
+        // version 1: one by one
+        /*
         // use TriggerCondition
         let tCondition1 =  DaysInAWeekTriggerCondition.fromSpec({daysInWeekIndexList: [2,4]});
         let resultRecord1 = await tCondition1.evaluate(user, curTime);
@@ -52,7 +64,7 @@ export default class DaysInWeekFixedTimeTrigger implements ITrigger {
         result = GeneralUtility.reduceBooleanArray(valueList, "and");
 
         return new GenericRecord({value: result, recordList: conditionEvaluationResultList}, curTime);
-
+        */
 
         // Without Condition
         /*
@@ -77,7 +89,7 @@ export default class DaysInWeekFixedTimeTrigger implements ITrigger {
 
         
         let title = `[${this.getName()}]`;
-        let message: string = `Hi ${user.getName()}. It's one among ${this.#shouldRunRecord["record"]["daysInWeekIndexList"]}`;
+        let message: string = `Hi ${user.getName()}.`;
         
         let aAction = new DesktopNotificationAction({
             title: title,
