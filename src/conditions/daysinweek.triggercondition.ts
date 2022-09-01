@@ -9,7 +9,6 @@ export default class DaysInAWeekTriggerCondition implements ITriggerCondition {
 
     name: string = "DaysInAWeekTriggerCondition";
 
-
     #daysInWeekIndexList: number[];
 
     constructor(daysInWeekIndexList: number[]) {
