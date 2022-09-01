@@ -5,14 +5,6 @@ import { ITriggerCondition } from '../models/triggercondition.interface';
 import GeneralUtility from '../utilities/generalutilities';
 import { DateTime } from 'luxon';
 
-// implements ITriggerCondition
-/*
-function staticImplements<T>() {
-    return <U extends T>(constructor: U) => {constructor};
-}
-@staticImplements<ITriggerConditionStatic>()
-*/
-
 export default class DaysInAWeekTriggerCondition implements ITriggerCondition {
 
     name: string = "DaysInAWeekTriggerCondition";
