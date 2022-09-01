@@ -8,7 +8,7 @@ export interface ITriggerCondition {
     name: string;
     
     // public, expected to be called
-    check(user: User, curTime: Date):Promise<GenericRecord>;
+    check(user: User | null, curTime: Date):Promise<GenericRecord>;
     getName(): string;
 
     // dont' require it for now

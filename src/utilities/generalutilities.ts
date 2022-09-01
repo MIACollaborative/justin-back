@@ -2,7 +2,11 @@ import { DateTime, Interval, Duration, DurationUnit, DurationLikeObject, Duratio
 
 export default class GeneralUtility {
 
-    static unitList = ["year", "month", "day", "hour", "minute", "second", "millisecond"]
+    static unitList = ["year", "month", "day", "hour", "minute", "second", "millisecond"];
+
+    static getLocalTime(date: Date, timezone:string) {
+        return DateTime.fromJSDate(date).setZone(timezone);
+    }
 
     static initializeDateWithHourMinuteString(hourMinuteString:string, timeszoneString: string):Date {
         let datetime = DateTime.fromFormat(hourMinuteString, "t", { zone: timeszoneString });
