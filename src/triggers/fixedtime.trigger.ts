@@ -59,7 +59,7 @@ export default class FixedTimeTrigger implements ITrigger {
 
         // use TriggerCondition
         let tCondition = FixedTimeTriggerCondition.fromSpec({targetTimeString: "12:12 PM"});
-        let resultRecord = await tCondition.check(user, curTime);
+        let resultRecord = await tCondition.evaluate(user, curTime);
 
         return resultRecord;
 
@@ -97,7 +97,7 @@ export default class FixedTimeTrigger implements ITrigger {
         //let actionResult = await createDesktopNotification(`[${this.getName()}]`, message);
 
 
-        let actionResultRecord = await aAction.execute(user, curTime);
+        let actionResultRecord = await aAction.evaluate(user, curTime);
 
         writeLogMessage(message).then(() => {
             // not sure what to do here.

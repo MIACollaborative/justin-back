@@ -1,9 +1,10 @@
 import notifier from "node-notifier";
 import { IAction } from "../models/action.interface";
+import { GenericAction } from "../models/genericaction.model";
 import { GenericRecord } from "../models/genericrecord.model";
 import { User } from "../models/user.model";
 
-export default class DesktopNotificationAction implements IAction {
+export default class DesktopNotificationAction extends GenericAction {
 
   name: string = "DesktopNotificationAction";
 
@@ -11,6 +12,7 @@ export default class DesktopNotificationAction implements IAction {
   #message:string;
 
   constructor(metaObj: {title:string, message:string}) {
+    super();
     this.#title = metaObj["title"];
     this.#message = metaObj["message"];
   }
@@ -19,7 +21,7 @@ export default class DesktopNotificationAction implements IAction {
       return this.name;
   }
 
-  async execute(user: User, curTime: Date): Promise<GenericRecord> {
+  async evaluate(user: User, curTime: Date): Promise<GenericRecord> {
       console.log(`[Action]`, this.getName(), `curTime`, curTime);
 
       let result = await notifier.notify(
@@ -39,19 +41,5 @@ export default class DesktopNotificationAction implements IAction {
 
       return this.generateRecord({value: result, metaObj:{title: this.#title, message: this.#message}}, curTime);
   }
-
-  generateRecord( recordObj:Object, curTime: Date):GenericRecord{
-      return new GenericRecord(recordObj, curTime);
-  }
-
-  /*
-  static fromSpec(spec: Object): ITriggerCondition {
-   
-   let newTCondition = new FixedTimeTriggerCondition(spec["targetTimeString"]);
-   
-   return newTCondition;
-
-  }
-  */
 
 }

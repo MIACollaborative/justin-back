@@ -7,13 +7,14 @@ import * as userService from '../db/users.service';
 
 
 // actual testing
+/*
 let aCondition = DaysInAWeekTriggerCondition.fromSpec({daysInWeekIndexList: [2,4]});
 
 const what = async () => {
     let users = await userService.getAllUsers();
-    let result = await aCondition.check(users[0], new Date());
+    let result = await aCondition.evaluate(users[0], new Date());
     console.log(`result: ${result}`);
 };
 
 what();
-
+*/

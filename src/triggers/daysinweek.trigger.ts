@@ -60,7 +60,7 @@ export default class DaysInWeekTrigger implements ITrigger {
 
         // use TriggerCondition
         let tCondition =  DaysInAWeekTriggerCondition.fromSpec({daysInWeekIndexList: [2,4]});
-        let resultRecord = await tCondition.check(user, curTime);
+        let resultRecord = await tCondition.evaluate(user, curTime);
 
         return resultRecord;
 
@@ -84,7 +84,7 @@ export default class DaysInWeekTrigger implements ITrigger {
     }
 
     async doAction(user: User, curTime: Date): Promise<GenericRecord> {
-        console.log('[Trigger] ', this.getName(), '.doAction()');
+        console.log('[Trigger] ', this.getName(), '.doAction()'); 
 
         
         let title = `[${this.getName()}]`;
@@ -98,7 +98,7 @@ export default class DaysInWeekTrigger implements ITrigger {
         //let message: string = selectMessage(user, curTime).text;
         //let actionResult = await createDesktopNotification(`[${this.getName()}]`, message);
 
-        let actionResultRecord = await aAction.execute(user, curTime);
+        let actionResultRecord = await aAction.evaluate(user, curTime);
 
         writeLogMessage(message).then(() => {
             // not sure what to do here.

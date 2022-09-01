@@ -3,6 +3,7 @@ import { User } from '../models/user.model';
 import { GenericRecord } from '../models/genericrecord.model';
 import { ITriggerCondition } from '../models/triggercondition.interface';
 import GeneralUtility from '../utilities/generalutilities';
+import { GenericCondition } from '../models/genericcondition.model';
 
 
 // implements ITriggerCondition
@@ -13,20 +14,17 @@ function staticImplements<T>() {
 @staticImplements<ITriggerConditionStatic>()
 */
 
-export default class FixedTimeTriggerCondition implements ITriggerCondition {
+export default class FixedTimeTriggerCondition extends GenericCondition {
 
     name: string = "FixedTimeTriggerCondition";
     targetTimeString: string = "12:04 PM";
 
     constructor(targetTimeString) {
+        super();
         this.targetTimeString = targetTimeString;
     }
 
-    getName(): string {
-        return this.name;
-    }
-
-    async check(user: User, curTime: Date): Promise<GenericRecord> {
+    async evaluate(user: User, curTime: Date): Promise<GenericRecord> {
         console.log(`[Condition]`, this.getName(), `targetTimeString`, this.targetTimeString);
 
         // assuming this is the user timezone
@@ -38,11 +36,7 @@ export default class FixedTimeTriggerCondition implements ITriggerCondition {
         return this.generateRecord({value: result, targetTimeString: this.targetTimeString}, curTime);
     }
 
-    generateRecord( recordObj:Object, curTime: Date):GenericRecord{
-        return new GenericRecord(recordObj, curTime);
-    }
-
-    static fromSpec(spec: Object): ITriggerCondition {
+    static fromSpec(spec: Object): GenericCondition {
      
      let newTCondition = new FixedTimeTriggerCondition(spec["targetTimeString"]);
      

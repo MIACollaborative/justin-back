@@ -121,4 +121,24 @@ export default class GeneralUtility {
 
         return datetimeB.diff(datetimeA, unitsList);
     }
+
+    static reduceBooleanArray(bArray, operator){
+        let result = true;
+
+        switch(operator){
+            case "and":
+                result = bArray.reduce((previousValue, currentValue) => previousValue && currentValue,true);
+                break;
+            case "or":
+                result = bArray.reduce((previousValue, currentValue) => previousValue || currentValue,true);
+                break;
+            case "not any":
+                result = !bArray.reduce((previousValue, currentValue) => previousValue || currentValue,true);
+                break;
+            default:
+                break;
+        }
+        
+        return result;
+      }
 }

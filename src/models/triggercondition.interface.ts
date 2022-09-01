@@ -15,7 +15,9 @@ export interface ITriggerCondition {
     //fromSpec(spec:Object):ITriggerCondition;
 }
 
+/*
 export interface ITriggerConditionStatic {
     new(): ITriggerCondition;
     fromSpec(spec:Object):ITriggerCondition;
 }
+*/
