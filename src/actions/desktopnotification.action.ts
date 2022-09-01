@@ -16,11 +16,7 @@ export default class DesktopNotificationAction extends GenericAction {
     this.#title = metaObj["title"];
     this.#message = metaObj["message"];
   }
-
-  getName(): string {
-      return this.name;
-  }
-
+  
   async evaluate(user: User, curTime: Date): Promise<GenericRecord> {
       console.log(`[Action]`, this.getName(), `curTime`, curTime);
 
