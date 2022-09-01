@@ -8,6 +8,8 @@ import GeneralUtility from "../utilities/generalutilities";
 
 export class AllConditionArbiter extends GenericArbiter {
 
+    name: string = "AllConditionArbiter";
+
     async evaluate(user:User, curTime:Date, metaObject:{evaluableList: GenericCondition[]}):Promise<GenericRecord>{
         let conditionEvaluationResultList:GenericRecord[] = [];
         for(let i = 0 ; i < metaObject.evaluableList.length; i++){
