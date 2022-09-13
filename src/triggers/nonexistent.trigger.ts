@@ -39,6 +39,18 @@ export default class NonExistentTrigger implements ITrigger {
     }
 
     
+    
+    generateRecord(user: User, curTime: Date, shouldRunRecord:GenericRecord, probabilityRecord?:GenericRecord, actionRecord?:GenericRecord):TriggerRecord{
+        let recordObj = {
+            shouldRunRecord: shouldRunRecord,
+            probabilityRecord: probabilityRecord,
+            actionReord: actionRecord
+        };
+        return new TriggerRecord(user, this.getName(), recordObj, curTime);
+    }
+
+
+    /*
     async execute(user: User, curTime: Date): Promise<TriggerRecord>{
         console.log('[Trigger] ', this.getName(), '.execute()', curTime);
 
@@ -71,15 +83,6 @@ export default class NonExistentTrigger implements ITrigger {
         return this.generateRecord(user, curTime, this.#shouldRunRecord, this.#probabilityRecord, this.#actionRecord);
 
     }
-
-    generateRecord(user: User, curTime: Date, shouldRunRecord:GenericRecord, probabilityRecord?:GenericRecord, actionRecord?:GenericRecord):TriggerRecord{
-        let recordObj = {
-            shouldRunRecord: shouldRunRecord,
-            probabilityRecord: probabilityRecord,
-            actionReord: actionRecord
-        };
-        return new TriggerRecord(user, this.getName(), recordObj, curTime);
-    }
-
+    */
 
 }

@@ -12,9 +12,11 @@ export default class DaysInAWeekTriggerCondition extends GenericCondition {
 
     #daysInWeekIndexList: number[];
 
-    constructor(daysInWeekIndexList: number[]) {
+
+    constructor(daysInWeekIndexList: number[], forValidity: boolean = false) {
         super();
         this.#daysInWeekIndexList = daysInWeekIndexList;
+        this.forValidity = forValidity;
     }
 
     async evaluate(user: User | null, curTime: Date): Promise<GenericRecord> {
@@ -43,9 +45,9 @@ export default class DaysInAWeekTriggerCondition extends GenericCondition {
         return this.generateRecord({value: result, daysInWeekIndexList: this.#daysInWeekIndexList}, curTime);
     }
 
-    static fromSpec(spec: {daysInWeekIndexList: number[]}): GenericCondition {
+    static fromSpec(spec: {daysInWeekIndexList: number[], forValidity: boolean}): GenericCondition {
      
-     let newTCondition = new DaysInAWeekTriggerCondition(spec["daysInWeekIndexList"] as number[]);
+     let newTCondition = new DaysInAWeekTriggerCondition(spec["daysInWeekIndexList"], spec["forValidity"]);
      
      return newTCondition;
 

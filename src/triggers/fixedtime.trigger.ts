@@ -7,6 +7,8 @@ import { GenericRecord } from '../models/genericrecord.model';
 import FixedTimeTriggerCondition from '../conditions/fixedtime.triggercondition';
 import { NoActionDecisionRecord } from '../models/noaction.decisionrecord';
 import DesktopNotificationAction from '../actions/desktopnotification.action';
+import { GenericCondition } from '../models/genericcondition.model';
+import { AllConditionArbiter } from '../arbiters/allcondition.arbiter';
 
 export default class FixedTimeTrigger implements ITrigger {
 
@@ -22,47 +24,26 @@ export default class FixedTimeTrigger implements ITrigger {
         return this.name;
     }
 
-    async execute(user: User, curTime: Date): Promise<TriggerRecord>{
-        console.log('[Trigger] ', this.getName(), '.execute()', curTime);
 
-        this.#shouldRunRecord = await this.shouldRun(user, curTime);
-
-        console.log('[Trigger] ', this.getName(), '.shouldRun()', JSON.stringify(this.#shouldRunRecord.record));
-
-        if (!this.#shouldRunRecord["record"]["value"]){
-            return this.generateRecord(user, curTime, this.#shouldRunRecord);
-        }
-
-        let diceRoll = Math.random();
-        console.log('dice role:', diceRoll);
-
-        let probabilityGot = await this.getProbability(user, curTime);
-
-        console.log('probabilityGot:', JSON.stringify(probabilityGot, null, 2));
-
-        let probability = probabilityGot["record"]["value"];
-
-        this.#probabilityRecord = new GenericRecord({value: diceRoll, probability: probability}, curTime);
-
-        if (diceRoll < probability) {
-            this.#actionRecord = await this.doAction(user, curTime);
-        } else {
-            this.#actionRecord = new NoActionDecisionRecord(user, this.getName(), curTime);
-            console.log('no action, record:', this.#actionRecord);
-        }
-
-        return this.generateRecord(user, curTime, this.#shouldRunRecord, this.#probabilityRecord, this.#actionRecord);
-
-    }
 
     async shouldRun(user: User, curTime: Date): Promise<GenericRecord> {
 
-        // use TriggerCondition
-        let tCondition = FixedTimeTriggerCondition.fromSpec({targetTimeString: "12:12 PM"});
+        // version 4: use arbiter directly
+        let conditionList:GenericCondition[] = [];
+
+        let tCondition = FixedTimeTriggerCondition.fromSpec({targetTimeString: "12:12 PM", forValidity: true});
+
+        conditionList.push(tCondition);
+        
+        return await new AllConditionArbiter().evaluate(user, curTime, {evaluableList: conditionList});
+
+        // version 3: use TriggerCondition
+        /*
+        let tCondition = FixedTimeTriggerCondition.fromSpec({targetTimeString: "12:12 PM", forValidity: true});
         let resultRecord = await tCondition.evaluate(user, curTime);
 
         return resultRecord;
-
+        */
 
         // Without Condition
         /*
@@ -118,4 +99,38 @@ export default class FixedTimeTrigger implements ITrigger {
         return new TriggerRecord(user, this.getName(), recordObj, curTime);
     }
 
+    /*
+    async execute(user: User, curTime: Date): Promise<TriggerRecord>{
+        console.log('[Trigger] ', this.getName(), '.execute()', curTime);
+
+        this.#shouldRunRecord = await this.shouldRun(user, curTime);
+
+        console.log('[Trigger] ', this.getName(), '.shouldRun()', JSON.stringify(this.#shouldRunRecord.record));
+
+        if (!this.#shouldRunRecord["record"]["value"]){
+            return this.generateRecord(user, curTime, this.#shouldRunRecord);
+        }
+
+        let diceRoll = Math.random();
+        console.log('dice role:', diceRoll);
+
+        let probabilityGot = await this.getProbability(user, curTime);
+
+        console.log('probabilityGot:', JSON.stringify(probabilityGot, null, 2));
+
+        let probability = probabilityGot["record"]["value"];
+
+        this.#probabilityRecord = new GenericRecord({value: diceRoll, probability: probability}, curTime);
+
+        if (diceRoll < probability) {
+            this.#actionRecord = await this.doAction(user, curTime);
+        } else {
+            this.#actionRecord = new NoActionDecisionRecord(user, this.getName(), curTime);
+            console.log('no action, record:', this.#actionRecord);
+        }
+
+        return this.generateRecord(user, curTime, this.#shouldRunRecord, this.#probabilityRecord, this.#actionRecord);
+
+    }
+    */
 }

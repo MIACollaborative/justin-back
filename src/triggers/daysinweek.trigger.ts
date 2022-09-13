@@ -8,6 +8,8 @@ import FixedTimeTriggerCondition from '../conditions/fixedtime.triggercondition'
 import { NoActionDecisionRecord } from '../models/noaction.decisionrecord';
 import DesktopNotificationAction from '../actions/desktopnotification.action';
 import DaysInAWeekTriggerCondition from '../conditions/daysinweek.triggercondition';
+import { GenericCondition } from '../models/genericcondition.model';
+import { AllConditionArbiter } from '../arbiters/allcondition.arbiter';
 
 export default class DaysInWeekTrigger implements ITrigger {
 
@@ -23,47 +25,34 @@ export default class DaysInWeekTrigger implements ITrigger {
         return this.name;
     }
 
-    async execute(user: User, curTime: Date): Promise<TriggerRecord>{
-        console.log('[Trigger] ', this.getName(), '.execute()', curTime);
 
-        this.#shouldRunRecord = await this.shouldRun(user, curTime);
-
-        console.log('[Trigger] ', this.getName(), '.shouldRun()', JSON.stringify(this.#shouldRunRecord.record));
-
-        if (!this.#shouldRunRecord["record"]["value"]){
-            return this.generateRecord(user, curTime, this.#shouldRunRecord);
-        }
-
-        let diceRoll = Math.random();
-        console.log('dice role:', diceRoll);
-
-        let probabilityGot = await this.getProbability(user, curTime);
-
-        console.log('probabilityGot:', JSON.stringify(probabilityGot, null, 2));
-
-        let probability = probabilityGot["record"]["value"];
-
-        this.#probabilityRecord = new GenericRecord({value: diceRoll, probability: probability}, curTime);
-
-        if (diceRoll < probability) {
-            this.#actionRecord = await this.doAction(user, curTime);
-        } else {
-            this.#actionRecord = new NoActionDecisionRecord(user, this.getName(), curTime);
-            console.log('no action, record:', this.#actionRecord);
-        }
-
-        return this.generateRecord(user, curTime, this.#shouldRunRecord, this.#probabilityRecord, this.#actionRecord);
-
-    }
 
     async shouldRun(user: User, curTime: Date): Promise<GenericRecord> {
 
-        // use TriggerCondition
+        // version 4: use arbiter directly
+        let conditionList:GenericCondition[] = [];
+
+        let tCondition =  DaysInAWeekTriggerCondition.fromSpec({daysInWeekIndexList: [2,4], forValidity: true});
+
+        conditionList.push(tCondition);
+        
+        return await new AllConditionArbiter().evaluate(user, curTime, {evaluableList: conditionList});
+
+        // version 3: separate shceckpoint and the rest
+        //let isValidResult = await this.isValidCheckpoint(user, curTime);
+
+        // if there is anything else needs to be checked
+        
+        // return the result
+        //return await this.isValidCheckpoint(user, curTime);
+
+        // version 2: use TriggerCondition
+        /*
         let tCondition =  DaysInAWeekTriggerCondition.fromSpec({daysInWeekIndexList: [2,4]});
         let resultRecord = await tCondition.evaluate(user, curTime);
 
         return resultRecord;
-
+        */
 
         // Without Condition
         /*
@@ -78,6 +67,8 @@ export default class DaysInWeekTrigger implements ITrigger {
         return result;
         */
     }
+
+
 
     async getProbability(user: User, curTime: Date): Promise<GenericRecord> {
         return new GenericRecord({ value: 1.0 }, curTime);
@@ -118,5 +109,53 @@ export default class DaysInWeekTrigger implements ITrigger {
         };
         return new TriggerRecord(user, this.getName(), recordObj, curTime);
     }
+
+    /*
+    async execute(user: User, curTime: Date): Promise<TriggerRecord>{
+        console.log('[Trigger] ', this.getName(), '.execute()', curTime);
+
+        this.#shouldRunRecord = await this.shouldRun(user, curTime);
+
+        console.log('[Trigger] ', this.getName(), '.shouldRun()', JSON.stringify(this.#shouldRunRecord.record));
+
+        if (!this.#shouldRunRecord["record"]["value"]){
+            return this.generateRecord(user, curTime, this.#shouldRunRecord);
+        }
+
+        let diceRoll = Math.random();
+        console.log('dice role:', diceRoll);
+
+        let probabilityGot = await this.getProbability(user, curTime);
+
+        console.log('probabilityGot:', JSON.stringify(probabilityGot, null, 2));
+
+        let probability = probabilityGot["record"]["value"];
+
+        this.#probabilityRecord = new GenericRecord({value: diceRoll, probability: probability}, curTime);
+
+        if (diceRoll < probability) {
+            this.#actionRecord = await this.doAction(user, curTime);
+        } else {
+            this.#actionRecord = new NoActionDecisionRecord(user, this.getName(), curTime);
+            console.log('no action, record:', this.#actionRecord);
+        }
+
+        return this.generateRecord(user, curTime, this.#shouldRunRecord, this.#probabilityRecord, this.#actionRecord);
+
+    }
+    */
+
+        // no, don't do this. too complicated
+    /*
+    async isValidCheckpoint(user: User, curTime: Date): Promise<GenericRecord> {
+
+        // use TriggerCondition
+        let tCondition =  DaysInAWeekTriggerCondition.fromSpec({daysInWeekIndexList: [2,4]});
+        let resultRecord = await tCondition.evaluate(user, curTime);
+
+        // need to return an extra property "valid" as part of the "record" property
+        return {...resultRecord, record:{...resultRecord["record"], valid: resultRecord["record"]["value"]}};
+    }
+    */
 
 }

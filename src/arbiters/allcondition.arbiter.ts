@@ -16,6 +16,13 @@ export class AllConditionArbiter extends GenericArbiter {
             let condition:GenericCondition = metaObject.evaluableList[i];
             let resultRecord:GenericRecord = await condition.evaluate(user, curTime);
             conditionEvaluationResultList.push(resultRecord);
+
+            // if we want to speed thing up by enforcing validity to be true
+            if(!resultRecord['record']['validity']){
+                // stop as soon as we find one condition to be invalid
+                // (meaning, the triiger was not even worth of considering)
+                break;
+            }
         }
 
         let result = true;
@@ -28,8 +35,22 @@ export class AllConditionArbiter extends GenericArbiter {
 
         result = GeneralUtility.reduceBooleanArray(valueList, "and");
 
-        return new GenericRecord({value: result, recordList: conditionEvaluationResultList}, curTime);
+        // validity: most likely use "and", but people can customize
+        let validity = true;
+
+        let validityList = conditionEvaluationResultList.map((record) => {
+            return record['record']['validity'];
+        });
+
+        console.log(`validityList: ${validityList}`);
+
+        validity = GeneralUtility.reduceBooleanArray(validityList, "and");
+
+
+        return new GenericRecord({value: result, validity: validity,  recordList: conditionEvaluationResultList}, curTime);
     }
+
+    
     /*
     static compose(user:User, curTime:Date, metaObject:{evaluableList: GenericEvaluable[]}): GenericArbiter{
         return new GenericArbiter();
