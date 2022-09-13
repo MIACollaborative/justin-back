@@ -7,6 +7,8 @@ import { GenericRecord } from '../models/genericrecord.model';
 import FixedTimeTriggerCondition from '../conditions/fixedtime.triggercondition';
 import { NoActionDecisionRecord } from '../models/noaction.decisionrecord';
 import DesktopNotificationAction from '../actions/desktopnotification.action';
+import { GenericCondition } from '../models/genericcondition.model';
+import { AllConditionArbiter } from '../arbiters/allcondition.arbiter';
 
 export default class FixedTimeTrigger implements ITrigger {
 
@@ -57,12 +59,22 @@ export default class FixedTimeTrigger implements ITrigger {
 
     async shouldRun(user: User, curTime: Date): Promise<GenericRecord> {
 
-        // use TriggerCondition
+        // version 4: use arbiter directly
+        let conditionList:GenericCondition[] = [];
+
+        let tCondition = FixedTimeTriggerCondition.fromSpec({targetTimeString: "12:12 PM", forValidity: true});
+
+        conditionList.push(tCondition);
+        
+        return await new AllConditionArbiter().evaluate(user, curTime, {evaluableList: conditionList});
+
+        // version 3: use TriggerCondition
+        /*
         let tCondition = FixedTimeTriggerCondition.fromSpec({targetTimeString: "12:12 PM", forValidity: true});
         let resultRecord = await tCondition.evaluate(user, curTime);
 
         return resultRecord;
-
+        */
 
         // Without Condition
         /*

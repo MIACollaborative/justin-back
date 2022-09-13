@@ -28,7 +28,19 @@ export class AllConditionArbiter extends GenericArbiter {
 
         result = GeneralUtility.reduceBooleanArray(valueList, "and");
 
-        return new GenericRecord({value: result, recordList: conditionEvaluationResultList}, curTime);
+        // validity: most likely use "and", but people can customize
+        let validity = true;
+
+        let validityList = conditionEvaluationResultList.map((record) => {
+            return record['record']['validity'];
+        });
+
+        console.log(`validityList: ${validityList}`);
+
+        validity = GeneralUtility.reduceBooleanArray(validityList, "and");
+
+
+        return new GenericRecord({value: result, validity: validity,  recordList: conditionEvaluationResultList}, curTime);
     }
     /*
     static compose(user:User, curTime:Date, metaObject:{evaluableList: GenericEvaluable[]}): GenericArbiter{
