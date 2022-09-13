@@ -21,6 +21,7 @@ export class AllConditionArbiter extends GenericArbiter {
             if(!resultRecord['record']['validity']){
                 // stop as soon as we find one condition to be invalid
                 // (meaning, the triiger was not even worth of considering)
+                console.log(`${this.name}.evaluate: ${condition.getName()}.validity == false, skipping the rest of the conditions.`);
                 break;
             }
         }
@@ -50,7 +51,7 @@ export class AllConditionArbiter extends GenericArbiter {
         return new GenericRecord({value: result, validity: validity,  recordList: conditionEvaluationResultList}, curTime);
     }
 
-    
+
     /*
     static compose(user:User, curTime:Date, metaObject:{evaluableList: GenericEvaluable[]}): GenericArbiter{
         return new GenericArbiter();
