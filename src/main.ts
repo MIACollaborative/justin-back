@@ -26,7 +26,7 @@ export async function doTick(curTime: Date) {
             console.log('[Trigger] ', t, '.shouldRun()', shouldRunRecord);
 
             if (!shouldRunRecord["record"]["validity"]){
-                // now valid, we don't even need a record
+                // not valid, we don't even need a record
                 continue;    
             }
             else if (!shouldRunRecord["record"]["value"]){

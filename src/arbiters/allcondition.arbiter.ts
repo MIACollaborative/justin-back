@@ -16,6 +16,13 @@ export class AllConditionArbiter extends GenericArbiter {
             let condition:GenericCondition = metaObject.evaluableList[i];
             let resultRecord:GenericRecord = await condition.evaluate(user, curTime);
             conditionEvaluationResultList.push(resultRecord);
+
+            // if we want to speed thing up by enforcing validity to be true
+            if(!resultRecord['record']['validity']){
+                // stop as soon as we find one condition to be invalid
+                // (meaning, the triiger was not even worth of considering)
+                break;
+            }
         }
 
         let result = true;
@@ -42,6 +49,8 @@ export class AllConditionArbiter extends GenericArbiter {
 
         return new GenericRecord({value: result, validity: validity,  recordList: conditionEvaluationResultList}, curTime);
     }
+
+    
     /*
     static compose(user:User, curTime:Date, metaObject:{evaluableList: GenericEvaluable[]}): GenericArbiter{
         return new GenericArbiter();
