@@ -28,7 +28,7 @@ async function doTests() {
     await loadTestTriggers();
 
 
-    let theExpression = expressionLabelDict["1 minute"];
+    let theExpression = expressionLabelDict["10 seconds"];
 
 
     nodeCron.schedule(theExpression.expression, async () => {
