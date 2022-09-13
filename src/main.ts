@@ -21,6 +21,7 @@ export async function doTick(curTime: Date) {
         for (let t of triggers) {
             console.log('running trigger', t.getName(), 'for user', u.getName());
 
+            // version 2: moving the execution to the trigger....
             let tRecord = await t.execute(u, curTime);
             addTriggerRecord(tRecord);
 

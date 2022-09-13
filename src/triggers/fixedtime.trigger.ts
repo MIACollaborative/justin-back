@@ -58,7 +58,7 @@ export default class FixedTimeTrigger implements ITrigger {
     async shouldRun(user: User, curTime: Date): Promise<GenericRecord> {
 
         // use TriggerCondition
-        let tCondition = FixedTimeTriggerCondition.fromSpec({targetTimeString: "12:12 PM"});
+        let tCondition = FixedTimeTriggerCondition.fromSpec({targetTimeString: "12:12 PM", forValidity: true});
         let resultRecord = await tCondition.evaluate(user, curTime);
 
         return resultRecord;

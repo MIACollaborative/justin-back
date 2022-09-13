@@ -5,11 +5,10 @@ import { GenericRecord } from "./genericrecord.model";
 import { GenericEvaluable } from "./genericevaluable.model";
 
 export class GenericCondition extends GenericEvaluable {
+    forValidity: boolean = false;
 
-    /*
-    async evaluate(user:User, curTime:Date, metaObject?:Object):Promise<GenericRecord>{
-        return Promise.resolve(this.generateRecord({}, curTime));
+    generateRecord( recordObj:Object, curTime: Date):GenericRecord{
+        return new GenericRecord({...recordObj, validity: this.forValidity? recordObj["value"]: true}, curTime);
     }
-    */
 
 }

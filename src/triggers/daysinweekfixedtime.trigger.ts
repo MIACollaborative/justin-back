@@ -29,8 +29,8 @@ export default class DaysInWeekFixedTimeTrigger implements ITrigger {
     async shouldRun(user: User, curTime: Date): Promise<GenericRecord> {
         let conditionList:GenericCondition[] = [];
 
-        conditionList.push(DaysInAWeekTriggerCondition.fromSpec({daysInWeekIndexList: [2,4]}));
-        conditionList.push(FixedTimeTriggerCondition.fromSpec({targetTimeString: "12:12 PM"}));
+        conditionList.push(DaysInAWeekTriggerCondition.fromSpec({daysInWeekIndexList: [2,4], forValidity: true}));
+        conditionList.push(FixedTimeTriggerCondition.fromSpec({targetTimeString: "12:12 PM", forValidity: true}));
         
         return await new AllConditionArbiter().evaluate(user, curTime, {evaluableList: conditionList});
         
