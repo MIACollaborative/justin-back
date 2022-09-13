@@ -29,7 +29,7 @@ export default class DaysInWeekFixedTimeTrigger implements ITrigger {
     async shouldRun(user: User, curTime: Date): Promise<GenericRecord> {
         let conditionList:GenericCondition[] = [];
 
-        conditionList.push(FixedTimeTriggerCondition.fromSpec({targetTimeString: "11:37 AM", forValidity: true}));
+        conditionList.push(FixedTimeTriggerCondition.fromSpec({targetTimeString: "11:40 AM", forValidity: true}));
         conditionList.push(DaysInAWeekTriggerCondition.fromSpec({daysInWeekIndexList: [2,4], forValidity: true}));
         
         return await new AllConditionArbiter().evaluate(user, curTime, {evaluableList: conditionList});
@@ -67,6 +67,17 @@ export default class DaysInWeekFixedTimeTrigger implements ITrigger {
         return actionResultRecord;
     }
 
+
+    generateRecord(user: User, curTime: Date, shouldRunRecord:GenericRecord, probabilityRecord?:GenericRecord, actionRecord?:GenericRecord):TriggerRecord{
+        let recordObj = {
+            shouldRunRecord: shouldRunRecord,
+            probabilityRecord: probabilityRecord,
+            actionReord: actionRecord
+        };
+        return new TriggerRecord(user, this.getName(), recordObj, curTime);
+    }
+
+    /*
     async execute(user: User, curTime: Date): Promise<TriggerRecord>{
         console.log('[Trigger] ', this.getName(), '.execute()', curTime);
 
@@ -99,13 +110,5 @@ export default class DaysInWeekFixedTimeTrigger implements ITrigger {
         return this.generateRecord(user, curTime, this.#shouldRunRecord, this.#probabilityRecord, this.#actionRecord);
 
     }
-    generateRecord(user: User, curTime: Date, shouldRunRecord:GenericRecord, probabilityRecord?:GenericRecord, actionRecord?:GenericRecord):TriggerRecord{
-        let recordObj = {
-            shouldRunRecord: shouldRunRecord,
-            probabilityRecord: probabilityRecord,
-            actionReord: actionRecord
-        };
-        return new TriggerRecord(user, this.getName(), recordObj, curTime);
-    }
-
+    */
 }

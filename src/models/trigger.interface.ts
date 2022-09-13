@@ -8,7 +8,7 @@ export interface ITrigger {
     name: string;
     
     // public, expected to be called
-    execute(user: User, curTime: Date): Promise<TriggerRecord>;
+    //execute(user: User, curTime: Date): Promise<TriggerRecord>;
     getName(): string;
 
     // public, but only get called if further customization is needed

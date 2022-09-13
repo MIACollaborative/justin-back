@@ -31,7 +31,10 @@ export async function doTick(curTime: Date) {
             }
             else if (!shouldRunRecord["record"]["value"]){
                 // should not run, but want to leave a record
-                addTriggerRecord(t.generateRecord(u, curTime, shouldRunRecord));
+                let tempRecord = t.generateRecord(u, curTime, shouldRunRecord);
+                addTriggerRecord(tempRecord);
+                console.log('ran trigger', t, 'for user', u.getName(), '-> should not run: ', tempRecord);
+                continue;
             }
 
             let diceRoll = Math.random();
@@ -50,12 +53,12 @@ export async function doTick(curTime: Date) {
             if (diceRoll < probability) {
                 actionRecord = await t.doAction(u, curTime);
             } else {
-                actionRecord = new NoActionDecisionRecord(u, this.getName(), curTime);
+                actionRecord = new NoActionDecisionRecord(u, t.getName(), curTime);
                 console.log('no action, record:', actionRecord);
             }
 
             // run and store a record
-            let triggerRecord =  this.generateRecord(u, curTime, shouldRunRecord, probabilityRecord, actionRecord);
+            let triggerRecord =  t.generateRecord(u, curTime, shouldRunRecord, probabilityRecord, actionRecord);
             addTriggerRecord(triggerRecord);
 
             console.log('ran trigger', t, 'for user', u.getName(), ':', triggerRecord);

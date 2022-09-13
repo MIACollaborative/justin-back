@@ -62,6 +62,18 @@ export default class UserTimePrefTrigger implements ITrigger {
         return new DecisionRecord(user, this.name, { message: message }, curTime);
     }
 
+
+
+    generateRecord(user: User, curTime: Date, shouldRunRecord:GenericRecord, probabilityRecord?:GenericRecord, actionRecord?:GenericRecord):TriggerRecord{
+        let recordObj = {
+            shouldRunRecord: shouldRunRecord,
+            probabilityRecord: probabilityRecord,
+            actionReord: actionRecord
+        };
+        return new TriggerRecord(user, this.getName(), recordObj, curTime);
+    }
+
+    /*
     async execute(user: User, curTime: Date): Promise<TriggerRecord>{
         console.log('[Trigger] ', this.getName(), '.execute()', curTime);
 
@@ -95,12 +107,5 @@ export default class UserTimePrefTrigger implements ITrigger {
 
     }
 
-    generateRecord(user: User, curTime: Date, shouldRunRecord:GenericRecord, probabilityRecord?:GenericRecord, actionRecord?:GenericRecord):TriggerRecord{
-        let recordObj = {
-            shouldRunRecord: shouldRunRecord,
-            probabilityRecord: probabilityRecord,
-            actionReord: actionRecord
-        };
-        return new TriggerRecord(user, this.getName(), recordObj, curTime);
-    }
+    */
 }
