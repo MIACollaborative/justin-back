@@ -1,4 +1,4 @@
-import { Expo } from 'expo-server-sdk';
+import { Expo, ExpoPushErrorReceipt, ExpoPushMessage, ExpoPushReceiptId, ExpoPushSuccessTicket, ExpoPushTicket } from 'expo-server-sdk';
 
 // Create a new Expo SDK client
 // optionally providing an access token if you have enabled push security
@@ -7,8 +7,8 @@ import { Expo } from 'expo-server-sdk';
 let expo = new Expo();
 
 // Create the messages that you want to send to clients
-let messages = [];
-let somePushTokens = [];
+let messages:ExpoPushMessage[] = [];
+let somePushTokens:string[] = [];
 
 for (let pushToken of somePushTokens) {
   // Each push token looks like ExponentPushToken[xxxxxxxxxxxxxxxxxxxxxx]
@@ -34,14 +34,14 @@ for (let pushToken of somePushTokens) {
 // and to compress them (notifications with similar content will get
 // compressed).
 let chunks = expo.chunkPushNotifications(messages);
-let tickets = [];
+let tickets:ExpoPushTicket[] = [];
 (async () => {
   // Send the chunks to the Expo push notification service. There are
   // different strategies you could use. A simple one is to send one chunk at a
   // time, which nicely spreads the load out over time:
   for (let chunk of chunks) {
     try {
-      let ticketChunk = await expo.sendPushNotificationsAsync(chunk);
+      let ticketChunk:ExpoPushTicket[] = await expo.sendPushNotificationsAsync(chunk);
       console.log(ticketChunk);
       tickets.push(...ticketChunk);
       // NOTE: If a ticket contains an error code in ticket.details.error, you
@@ -70,12 +70,13 @@ let tickets = [];
 // notifications to devices that have blocked notifications or have uninstalled
 // your app. Expo does not control this policy and sends back the feedback from
 // Apple and Google so you can handle it appropriately.
-let receiptIds = [];
+let receiptIds: ExpoPushReceiptId[] = [];
+
 for (let ticket of tickets) {
   // NOTE: Not all tickets have IDs; for example, tickets for notifications
   // that could not be enqueued will have error information and no receipt ID.
-  if (ticket.id) {
-    receiptIds.push(ticket.id);
+  if (ticket.hasOwnProperty("id")) {
+    receiptIds.push((ticket as ExpoPushSuccessTicket).id);
   }
 }
 
@@ -91,10 +92,12 @@ let receiptIdChunks = expo.chunkPushNotificationReceiptIds(receiptIds);
       // The receipts specify whether Apple or Google successfully received the
       // notification and information about an error, if one occurred.
       for (let receiptId in receipts) {
-        let { status, message, details } = receipts[receiptId];
+        let { status } = receipts[receiptId];
+
         if (status === 'ok') {
           continue;
         } else if (status === 'error') {
+            let { message, details } = receipts[receiptId] as ExpoPushErrorReceipt;
           console.error(
             `There was an error sending a notification: ${message}`
           );
