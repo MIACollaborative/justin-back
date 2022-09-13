@@ -11,8 +11,15 @@ async function doTests() {
     // morning time for user1
     let t1 = process.hrtime();
     await doTick(new Date(2022, 8, 13, 11, 41, 0));
-    let t2 = process.hrtime();
-    console.log('did tick in', (t2[1] - t1[1]) / 1000000, 'ms');
+    
+
+    // version 2: try example online
+    let t2 = process.hrtime(t1);
+    
+    // version 1: from Mark
+    //let t2 = process.hrtime();
+
+    console.log('did tick in', t2[1]/1000000, 'ms');
 
     /*
     // no action
