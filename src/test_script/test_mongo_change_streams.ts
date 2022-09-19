@@ -4,8 +4,12 @@ import { GenericEventSubscriber } from "../models/genericeventsubscriber.model";
 
 dotenv.config();
 
+let filterList: Object[] =  [{ $match: { 
+    "operationType": "insert",
+    "fullDocument.name": "MyRandomEvent1" } 
+}];
 
-let eventSubscriber = new GenericEventSubscriber("justin", "events", []);
+let eventSubscriber = new GenericEventSubscriber("justin", "events", filterList);
 
 function myEventHandler(event:Object){
     console.log(`Got an event: ${event}`);
@@ -19,9 +23,13 @@ async function mySubscribe(){
 mySubscribe();
 
 function myAddEvent(): void{
-    console.log(`myAddEvent`);
+    console.log(`myAddEvent(s)`);
     addEvent({
-        name: "MyRandomEvent",
+        name: "MyRandomEvent1",
+        timestamp: new Date()
+    });
+    addEvent({
+        name: "MyRandomEvent2",
         timestamp: new Date()
     });
 }

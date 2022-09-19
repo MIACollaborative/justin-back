@@ -23,9 +23,10 @@ export class GenericEventSubscriber {
         
         const collection = await getEventCollection();
         
-        const changeStream = collection.watch();
+        const changeStream = collection.watch(this.#filterList);
 
         changeStream.on('change', (nextDoc) => {
+            console.log(`on change: ${JSON.stringify(nextDoc, null, 2)}`);
             // now call each listener
             this.#listenerList.forEach((oneListener)=> {
                 oneListener(nextDoc);
