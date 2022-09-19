@@ -9,6 +9,7 @@ import GeneralUtility from '../utilities/generalutilities';
 import { TriggerRecord } from '../models/triggerrecord.model';
 import { GenericRecord } from '../models/genericrecord.model';
 import { NoActionDecisionRecord } from '../models/noaction.decisionrecord';
+import { GenericEvent } from '../models/genericevent.model';
 
 export default class NonExistentTrigger implements ITrigger {
 
@@ -24,23 +25,19 @@ export default class NonExistentTrigger implements ITrigger {
         return this.name;
     }
 
-    async shouldRun(user: User, metaObj:{curTime: Date}): Promise<GenericRecord> {
-        let curTime = metaObj.curTime;
-
-        return new GenericRecord({value: true}, curTime);
+    async shouldDecide(user: User, event: GenericEvent): Promise<GenericRecord> {
+        return new GenericRecord({value: true}, event.providedTimestamp);
     }
 
-   async getProbability(user: User, curTime: Date): Promise<GenericRecord> {
-        return new GenericRecord({ value: 1.0 }, curTime);
+   async decide(user: User, event: GenericEvent): Promise<GenericRecord> {
+        return new GenericRecord({ value: 1.0 }, event.providedTimestamp);
     }
 
-    async doAction(user: User, curTime: Date): Promise<GenericRecord> {
-        let message: string = selectMessage(user, curTime).text;
+    async doAction(user: User, event: GenericEvent): Promise<GenericRecord> {
+        let message: string = selectMessage(user, event.providedTimestamp).text;
         console.log('did action, message:', message);
-        return new GenericRecord({ value: message }, curTime);
+        return new GenericRecord({ value: message }, event.providedTimestamp);
     }
-
-    
     
     generateRecord(user: User, curTime: Date, shouldRunRecord:GenericRecord, probabilityRecord?:GenericRecord, actionRecord?:GenericRecord):TriggerRecord{
         let recordObj = {

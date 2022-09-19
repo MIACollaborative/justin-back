@@ -1,9 +1,9 @@
 
 import { User } from '../models/user.model';
 import { GenericRecord } from '../models/genericrecord.model';
-import { ITriggerCondition } from '../models/triggercondition.interface';
 import GeneralUtility from '../utilities/generalutilities';
 import { GenericCondition } from '../models/genericcondition.model';
+import { GenericEvent } from '../models/genericevent.model';
 
 
 // implements ITriggerCondition
@@ -26,8 +26,9 @@ export default class FixedTimeTriggerCondition extends GenericCondition {
         this.forValidity = forValidity;
     }
 
-    async evaluate(user: User, curTime: Date): Promise<GenericRecord> {
+    async evaluate(user: User, event:GenericEvent): Promise<GenericRecord> {
         console.log(`[Condition]`, this.getName(), `targetTimeString`, this.#targetTimeString);
+        let curTime = event.providedTimestamp;
 
         // assuming this is the user timezone
         // next step: retrieving it from the user state?

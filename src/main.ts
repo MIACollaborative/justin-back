@@ -16,13 +16,15 @@ export async function doTick(curTime: Date) {
     let users = await userService.getAllUsers();
     let triggers = await configService.getTriggers();
     console.log(`triggers: ${triggers}`);
-    let decisionRecord: DecisionRecord;
     console.log('doing tick at', curTime);
+
+    let clockEvent = new  GenericEvent("clock", "system", curTime);
+
     for (let u of users) {
         u = u as User;
         for (let t of triggers) {
             // version 3: roll back to version 1
-            let shouldRunRecord = await t.shouldRun(u, curTime);
+            let shouldRunRecord = await t.shouldDecide(u,clockEvent);
 
             console.log('[Trigger] ', t, '.shouldRun()', shouldRunRecord);
 
@@ -41,7 +43,7 @@ export async function doTick(curTime: Date) {
             let diceRoll = Math.random();
             console.log('dice role:', diceRoll);
 
-            let probabilityGot = await t.getProbability(u, curTime);
+            let probabilityGot = await t.decide(u, clockEvent);
 
             console.log('probabilityGot:', JSON.stringify(probabilityGot, null, 2));
 
@@ -52,7 +54,7 @@ export async function doTick(curTime: Date) {
             let actionRecord;
 
             if (diceRoll < probability) {
-                actionRecord = await t.doAction(u, curTime);
+                actionRecord = await t.doAction(u, clockEvent);
             } else {
                 actionRecord = new NoActionDecisionRecord(u, t.getName(), curTime);
                 console.log('no action, record:', actionRecord);
@@ -116,7 +118,7 @@ export async function doEvent(curTime: Date, event:GenericEvent) {
         u = u as User;
         for (let t of triggers) {
             // version 3: roll back to version 1
-            let shouldRunRecord = await t.shouldRun(u, curTime, event);
+            let shouldRunRecord = await t.shouldDecide(u, event);
 
             console.log('[Trigger] ', t, '.shouldRun()', shouldRunRecord);
 
@@ -135,7 +137,7 @@ export async function doEvent(curTime: Date, event:GenericEvent) {
             let diceRoll = Math.random();
             console.log('dice role:', diceRoll);
 
-            let probabilityGot = await t.getProbability(u, curTime);
+            let probabilityGot = await t.decide(u, event);
 
             console.log('probabilityGot:', JSON.stringify(probabilityGot, null, 2));
 
@@ -146,7 +148,7 @@ export async function doEvent(curTime: Date, event:GenericEvent) {
             let actionRecord;
 
             if (diceRoll < probability) {
-                actionRecord = await t.doAction(u, curTime);
+                actionRecord = await t.doAction(u, event);
             } else {
                 actionRecord = new NoActionDecisionRecord(u, t.getName(), curTime);
                 console.log('no action, record:', actionRecord);

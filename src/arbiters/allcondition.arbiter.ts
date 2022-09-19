@@ -11,11 +11,11 @@ export class AllConditionArbiter extends GenericArbiter {
 
     name: string = "AllConditionArbiter";
 
-    async evaluate(user:User, metaObject:{event: {curTime:Date}, evaluableList: GenericCondition[]}):Promise<GenericRecord>{
+    async evaluate(user:User, event:GenericEvent, metaObject:{evaluableList: GenericCondition[]}):Promise<GenericRecord>{
         let conditionEvaluationResultList:GenericRecord[] = [];
         for(let i = 0 ; i < metaObject.evaluableList.length; i++){
             let condition:GenericCondition = metaObject.evaluableList[i];
-            let resultRecord:GenericRecord = await condition.evaluate(user, metaObject.event.curTime);
+            let resultRecord:GenericRecord = await condition.evaluate(user, event);
             conditionEvaluationResultList.push(resultRecord);
 
             // if we want to speed thing up by enforcing validity to be true

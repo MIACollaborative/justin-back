@@ -17,12 +17,11 @@ export default class EventNameTriggerCondition extends GenericCondition {
         this.forValidity = forValidity;
     }
 
-    async evaluate(user: User, curTime: Date, eventObject:GenericEvent): Promise<GenericRecord> {
-
+    async evaluate(user: User | null, event:GenericEvent): Promise<GenericRecord> {
         console.log(`[Condition]`, this.getName(), `eventName`, this.#eventName);
-        let result = this.#eventName == eventObject.name;
+        let result = this.#eventName == event.name;
 
-        return this.generateRecord({value: result, eventName: this.#eventName}, curTime);
+        return this.generateRecord({value: result, eventName: this.#eventName}, event.providedTimestamp);
     }
 
     static fromSpec(spec: {eventName: string, forValidity: boolean}): GenericCondition {
