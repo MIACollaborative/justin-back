@@ -7,9 +7,9 @@ import { GenericEvent } from "./genericevent.model";
 
 export class GenericArbiter extends GenericEvaluable {
 
-    async evaluate(user:User, curTime:Date, eventObj:GenericEvent, metaObject:{evaluableList: GenericEvaluable[]}):Promise<GenericRecord>{
+    async evaluate(user:User, metaObject:{event:{curTime:Date}, evaluableList: GenericEvaluable[]}):Promise<GenericRecord>{
         // origianl generic version
-        return Promise.resolve(this.generateRecord({}, curTime));
+        return Promise.resolve(this.generateRecord({}, metaObject.event.curTime));
     }
 
     generateRecord( recordObj:Object, curTime: Date):GenericRecord{

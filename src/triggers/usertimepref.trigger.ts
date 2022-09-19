@@ -23,7 +23,9 @@ export default class UserTimePrefTrigger implements ITrigger {
         return this.name;
     }
 
-    async shouldRun(user: User, curTime: Date): Promise<GenericRecord> {
+    async shouldRun(user: User, metaObj:{curTime: Date}): Promise<GenericRecord> {
+        let curTime = metaObj.curTime;
+        
         let prefs: MessageTimePrefs | undefined = 
             user.getPrefs(MessageTimePrefs.KEY) as MessageTimePrefs;
         let messageTimePrefs: MessageTimePrefs = 

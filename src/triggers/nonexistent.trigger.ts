@@ -24,7 +24,8 @@ export default class NonExistentTrigger implements ITrigger {
         return this.name;
     }
 
-    async shouldRun(user: User, curTime: Date): Promise<GenericRecord> {
+    async shouldRun(user: User, metaObj:{curTime: Date}): Promise<GenericRecord> {
+        let curTime = metaObj.curTime;
 
         return new GenericRecord({value: true}, curTime);
     }

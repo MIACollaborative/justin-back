@@ -30,17 +30,7 @@ export default class EventNameTrigger implements ITrigger {
 
 
 
-    async shouldRun(user: User, curTime: Date, eventObj:GenericEvent): Promise<GenericRecord> {
-         /*
-        let filterList: Object[] =  [{ $match: { 
-            "operationType": "insert",
-            "fullDocument.name": "MyRandomEvent1" } 
-        }];
-        */
-
-        // I am only interseted in those event that has the "name" as "MyRandomEvent1"
-
-       
+    async shouldRun(user: User, metaObj:GenericEvent): Promise<GenericRecord> {
 
         // version 4: use arbiter directly
         let conditionList:GenericCondition[] = [];

@@ -28,7 +28,8 @@ export default class DaysInWeekTrigger implements ITrigger {
 
 
 
-    async shouldRun(user: User, curTime: Date): Promise<GenericRecord> {
+    async shouldRun(user: User, metaObj:{curTime: Date}): Promise<GenericRecord> {
+        let curTime = metaObj.curTime;
 
         // version 4: use arbiter directly
         let conditionList:GenericCondition[] = [];
