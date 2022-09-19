@@ -6,7 +6,7 @@ import { GenericRecord } from './genericrecord.model';
 
 export interface ITrigger {
     name: string;
-    type: string;
+    type: string; //standard, event
     
     // public, expected to be called
     //execute(user: User, curTime: Date): Promise<TriggerRecord>;
