@@ -16,7 +16,7 @@ export default class UserTimePrefTrigger implements ITrigger {
     type: string = "standard";
 
     // private members
-    #shouldRunRecord: GenericRecord;
+    #shouldDecideRecord: GenericRecord;
     #probabilityRecord: GenericRecord;
     #actionRecord: GenericRecord;
 

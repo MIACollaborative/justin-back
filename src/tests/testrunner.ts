@@ -10,7 +10,7 @@ async function doTests() {
     
     // morning time for user1
     let t1 = process.hrtime();
-    await doTick(new Date(2022, 8, 13, 11, 41, 0));
+    await doTick(new Date(2022, 8, 19, 17, 0, 0));
     
 
     // version 2: try example online

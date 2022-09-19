@@ -32,7 +32,8 @@ export default class DaysInWeekFixedTimeTrigger implements ITrigger {
         let curTime = event.providedTimestamp;
         let conditionList:GenericCondition[] = [];
 
-        conditionList.push(FixedTimeTriggerCondition.fromSpec({targetTimeString: "11:40 AM", forValidity: true}));
+        conditionList.push(FixedTimeTriggerCondition.fromSpec({targetTimeString: "05:00 pM", forValidity: true}));
+        conditionList.push(DaysInAWeekTriggerCondition.fromSpec({daysInWeekIndexList: [1,3], forValidity: true}));
         
         return await new AllConditionArbiter().evaluate(user, event, {evaluableList: conditionList});
         
@@ -71,9 +72,9 @@ export default class DaysInWeekFixedTimeTrigger implements ITrigger {
     }
 
 
-    generateRecord(user: User, curTime: Date, shouldRunRecord:GenericRecord, probabilityRecord?:GenericRecord, actionRecord?:GenericRecord):TriggerRecord{
+    generateRecord(user: User, curTime: Date, shouldDecideRecord:GenericRecord, probabilityRecord?:GenericRecord, actionRecord?:GenericRecord):TriggerRecord{
         let recordObj = {
-            shouldRunRecord: shouldRunRecord,
+            shouldDecideRecord: shouldDecideRecord,
             probabilityRecord: probabilityRecord,
             actionReord: actionRecord
         };

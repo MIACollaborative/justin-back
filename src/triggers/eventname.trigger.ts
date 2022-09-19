@@ -19,9 +19,11 @@ export default class EventNameTrigger implements ITrigger {
     type: string = "event";
     
     // private members
-    #shouldRunRecord: GenericRecord;
+    #shouldDecideRecord: GenericRecord;
     #probabilityRecord: GenericRecord;
     #actionRecord: GenericRecord;
+
+    #eventName: string;
 
 
     getName(): string {
@@ -35,11 +37,15 @@ export default class EventNameTrigger implements ITrigger {
         // version 4: use arbiter directly
         let conditionList:GenericCondition[] = [];
 
-        let tCondition = EventNameTriggerCondition.fromSpec({eventName: "MyRandomeEvent1", forValidity: true});
+        this.#eventName = "MyRandomEvent1";
+
+        let tCondition = EventNameTriggerCondition.fromSpec({eventName: this.#eventName, forValidity: true});
 
         conditionList.push(tCondition);
+
+        this.#shouldDecideRecord = await new AllConditionArbiter().evaluate(user, event, {evaluableList: conditionList});
         
-        return await new AllConditionArbiter().evaluate(user, event, {evaluableList: conditionList});
+        return this.#shouldDecideRecord;
     }
 
 
@@ -49,12 +55,12 @@ export default class EventNameTrigger implements ITrigger {
     }
 
     async doAction(user: User, event:GenericEvent): Promise<GenericRecord> {
-        console.log('[Trigger] ', this.getName(), '.doAction()'); 
+        console.log('[Trigger] ', this.getName(), '.doAction()', "this.#shouldDecideRecord", this.#shouldDecideRecord); 
         let curTime = event.providedTimestamp;
 
         
         let title = `[${this.getName()}]`;
-        let message: string = `Hi ${user.getName()}. This event [${this.#shouldRunRecord["record"]["eventName"]}] just happened!`;
+        let message: string = `Hi ${user.getName()}. This event [${this.#eventName}] just happened!`;
         
         let aAction = new DesktopNotificationAction({
             title: title,
@@ -76,9 +82,9 @@ export default class EventNameTrigger implements ITrigger {
         return actionResultRecord;
     }
 
-    generateRecord(user: User, curTime: Date, shouldRunRecord:GenericRecord, probabilityRecord?:GenericRecord, actionRecord?:GenericRecord):TriggerRecord{
+    generateRecord(user: User, curTime: Date, shouldDecideRecord:GenericRecord, probabilityRecord?:GenericRecord, actionRecord?:GenericRecord):TriggerRecord{
         let recordObj = {
-            shouldRunRecord: shouldRunRecord,
+            shouldDecideRecord: shouldDecideRecord,
             probabilityRecord: probabilityRecord,
             actionReord: actionRecord
         };

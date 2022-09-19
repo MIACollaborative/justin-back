@@ -18,7 +18,7 @@ export default class EventNameTriggerCondition extends GenericCondition {
     }
 
     async evaluate(user: User | null, event:GenericEvent): Promise<GenericRecord> {
-        console.log(`[Condition]`, this.getName(), `eventName`, this.#eventName);
+        console.log(`[Condition]`, this.getName(), `eventName`, this.#eventName, "event.name", event.name);
         let result = this.#eventName == event.name;
 
         return this.generateRecord({value: result, eventName: this.#eventName}, event.providedTimestamp);

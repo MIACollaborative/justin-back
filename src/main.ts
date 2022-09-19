@@ -14,7 +14,13 @@ dotenv.config();
 // called by cron or by a test runner
 export async function doTick(curTime: Date) { 
     let users = await userService.getAllUsers();
-    let triggers = await configService.getTriggers();
+    
+    //let triggers = await configService.getTriggers();
+
+    let triggers = await (await configService.getTriggers()).filter((trigger) => {
+        return trigger["type"] != undefined && trigger.type == "standard";
+    });
+
     console.log(`triggers: ${triggers}`);
     console.log('doing tick at', curTime);
 
@@ -26,12 +32,17 @@ export async function doTick(curTime: Date) {
             // version 3: roll back to version 1
             let shouldRunRecord = await t.shouldDecide(u,clockEvent);
 
-            console.log('[Trigger] ', t, '.shouldRun()', shouldRunRecord);
+            console.log('[Trigger] ', t, '.shouldDecide()', shouldRunRecord);
 
             if (!shouldRunRecord["record"]["validity"]){
                 // not valid, we don't even need a record
+                console.log('ran trigger', t, 'for user', u.getName(), '-> should not decide');
                 continue;    
             }
+            else{
+                console.log('ran trigger', t, 'for user', u.getName(), '-> should decide');
+            }
+            /*
             else if (!shouldRunRecord["record"]["value"]){
                 // should not run, but want to leave a record
                 let tempRecord = t.generateRecord(u, curTime, shouldRunRecord);
@@ -39,6 +50,7 @@ export async function doTick(curTime: Date) {
                 console.log('ran trigger', t, 'for user', u.getName(), '-> should not run: ', tempRecord);
                 continue;
             }
+            */
 
             let diceRoll = Math.random();
             console.log('dice role:', diceRoll);

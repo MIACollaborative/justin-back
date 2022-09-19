@@ -17,7 +17,7 @@ export default class FixedTimeTrigger implements ITrigger {
     type: string = "standard";
     
     // private members
-    #shouldRunRecord: GenericRecord;
+    #shouldDecideRecord: GenericRecord;
     #probabilityRecord: GenericRecord;
     #actionRecord: GenericRecord;
 
@@ -35,7 +35,7 @@ export default class FixedTimeTrigger implements ITrigger {
         // version 4: use arbiter directly
         let conditionList:GenericCondition[] = [];
 
-        let tCondition = FixedTimeTriggerCondition.fromSpec({targetTimeString: "12:12 PM", forValidity: true});
+        let tCondition = FixedTimeTriggerCondition.fromSpec({targetTimeString: "05:00 PM", forValidity: true});
 
         conditionList.push(tCondition);
         
@@ -72,7 +72,7 @@ export default class FixedTimeTrigger implements ITrigger {
         let curTime = event.providedTimestamp;
         
         let title = `[${this.getName()}]`;
-        let message: string = `Hi ${user.getName()}. It's ${this.#shouldRunRecord["record"]["targetTimeString"]}`;
+        let message: string = `Hi ${user.getName()}. It's ${this.#shouldDecideRecord["record"]["targetTimeString"]}`;
         
         let aAction = new DesktopNotificationAction({
             title: title,

@@ -18,7 +18,7 @@ export default class DaysInWeekTrigger implements ITrigger {
     type: string = "standard";
     
     // private members
-    #shouldRunRecord: GenericRecord;
+    #shouldDecideRecord: GenericRecord;
     #probabilityRecord: GenericRecord;
     #actionRecord: GenericRecord;
 
@@ -85,7 +85,7 @@ export default class DaysInWeekTrigger implements ITrigger {
 
         
         let title = `[${this.getName()}]`;
-        let message: string = `Hi ${user.getName()}. It's one among ${this.#shouldRunRecord["record"]["daysInWeekIndexList"]}`;
+        let message: string = `Hi ${user.getName()}. It's one among ${this.#shouldDecideRecord["record"]["daysInWeekIndexList"]}`;
         
         let aAction = new DesktopNotificationAction({
             title: title,

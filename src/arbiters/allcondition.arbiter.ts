@@ -19,6 +19,7 @@ export class AllConditionArbiter extends GenericArbiter {
             conditionEvaluationResultList.push(resultRecord);
 
             // if we want to speed thing up by enforcing validity to be true
+            console.log(`${this.name}.evaluate(${condition.getName()}): validity: ${resultRecord['record']['validity']}`);
             if(!resultRecord['record']['validity']){
                 // stop as soon as we find one condition to be invalid
                 // (meaning, the triiger was not even worth of considering)
@@ -49,7 +50,7 @@ export class AllConditionArbiter extends GenericArbiter {
         validity = GeneralUtility.reduceBooleanArray(validityList, "and");
 
 
-        return new GenericRecord({value: result, validity: validity,  recordList: conditionEvaluationResultList}, curTime);
+        return new GenericRecord({value: result, validity: validity,  recordList: conditionEvaluationResultList}, event.providedTimestamp);
     }
 
 
