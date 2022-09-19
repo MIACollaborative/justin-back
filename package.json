@@ -7,7 +7,8 @@
   "scripts": {
     "dev": "ts-node-dev --respawn --pretty --transpile-only ./src/main.ts",
     "test": "ts-node-dev --respawn --pretty --transpile-only ./src/tests/testrunner.ts",
-    "cron": "ts-node-dev --respawn --pretty --transpile-only ./src/tests/cronrunner.ts"
+    "cron": "ts-node-dev --respawn --pretty --transpile-only ./src/tests/cronrunner.ts",
+    "event": "ts-node-dev --respawn --pretty --transpile-only ./src/tests/eventrunner.ts"
   },
   "devDependencies": {
     "ts-node-dev": "^2.0.0",

@@ -3,10 +3,11 @@ import { ITrigger } from './trigger.interface';
 import { GenericRecord } from "./genericrecord.model";
 
 import { GenericEvaluable } from "./genericevaluable.model";
+import { GenericEvent } from "./genericevent.model";
 
 export class GenericArbiter extends GenericEvaluable {
 
-    async evaluate(user:User, curTime:Date, metaObject:{evaluableList: GenericEvaluable[]}):Promise<GenericRecord>{
+    async evaluate(user:User, curTime:Date, eventObj:GenericEvent, metaObject:{evaluableList: GenericEvaluable[]}):Promise<GenericRecord>{
         // origianl generic version
         return Promise.resolve(this.generateRecord({}, curTime));
     }

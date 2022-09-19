@@ -28,10 +28,12 @@ function myAddEvent(): void{
         name: "MyRandomEvent1",
         timestamp: new Date()
     });
+    /*
     addEvent({
         name: "MyRandomEvent2",
         timestamp: new Date()
     });
+    */
 }
 
 let myVar = setInterval(myAddEvent, 1000);

@@ -15,6 +15,7 @@ import { AllConditionArbiter } from '../arbiters/allcondition.arbiter';
 export default class DaysInWeekFixedTimeTrigger implements ITrigger {
 
     name: string = "DaysInWeekFixedTimeTrigger";
+    type: string = "standard";
     
     // private members
     #shouldRunRecord: GenericRecord;

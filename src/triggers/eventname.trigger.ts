@@ -11,10 +11,12 @@ import DaysInAWeekTriggerCondition from '../conditions/daysinweek.triggerconditi
 import { GenericCondition } from '../models/genericcondition.model';
 import { AllConditionArbiter } from '../arbiters/allcondition.arbiter';
 import EventNameTriggerCondition from '../conditions/eventname.triggercondition';
+import { GenericEvent } from '../models/genericevent.model';
 
 export default class EventNameTrigger implements ITrigger {
 
     name: string = "EventNameTrigger";
+    type: string = "event";
     
     // private members
     #shouldRunRecord: GenericRecord;
@@ -28,7 +30,7 @@ export default class EventNameTrigger implements ITrigger {
 
 
 
-    async shouldRun(user: User, curTime: Date, eventObj:Object): Promise<GenericRecord> {
+    async shouldRun(user: User, curTime: Date, eventObj:GenericEvent): Promise<GenericRecord> {
          /*
         let filterList: Object[] =  [{ $match: { 
             "operationType": "insert",

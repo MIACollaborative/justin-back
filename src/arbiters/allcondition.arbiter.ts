@@ -5,12 +5,13 @@ import { GenericEvaluable } from "../models/genericevaluable.model";
 import { GenericArbiter } from "../models/genericarbiter.model";
 import { GenericCondition } from "../models/genericcondition.model";
 import GeneralUtility from "../utilities/generalutilities";
+import { GenericEvent } from "../models/genericevent.model";
 
 export class AllConditionArbiter extends GenericArbiter {
 
     name: string = "AllConditionArbiter";
 
-    async evaluate(user:User, curTime:Date, metaObject:{evaluableList: GenericCondition[]}):Promise<GenericRecord>{
+    async evaluate(user:User, curTime:Date, eventObj:GenericEvent, metaObject:{evaluableList: GenericCondition[]}):Promise<GenericRecord>{
         let conditionEvaluationResultList:GenericRecord[] = [];
         for(let i = 0 ; i < metaObject.evaluableList.length; i++){
             let condition:GenericCondition = metaObject.evaluableList[i];

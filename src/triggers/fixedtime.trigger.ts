@@ -13,6 +13,7 @@ import { AllConditionArbiter } from '../arbiters/allcondition.arbiter';
 export default class FixedTimeTrigger implements ITrigger {
 
     name: string = "FixedTimeTrigger";
+    type: string = "standard";
     
     // private members
     #shouldRunRecord: GenericRecord;

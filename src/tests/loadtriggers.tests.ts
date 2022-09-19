@@ -3,7 +3,7 @@ import { clearTriggers, addTrigger } from '../db/studyconfig.service';
 
 const testTriggers = [
     /* 'nonexistent.trigger', 'usertimepref.trigger',  'fixedtime.trigger', 'daysinweek.trigger',*/
-    "daysinweekfixedtime.trigger"
+    "daysinweekfixedtime.trigger", "eventname.trigger"
 ]
 
 export async function loadTestTriggers() {

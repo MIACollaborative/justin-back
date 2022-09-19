@@ -13,6 +13,7 @@ import { NoActionDecisionRecord } from '../models/noaction.decisionrecord';
 export default class NonExistentTrigger implements ITrigger {
 
     name: string = "NonExistentTrigger";
+    type: string = "standard";
 
     // private members
     #shouldRunRecord: GenericRecord;

@@ -1,11 +1,12 @@
 import { User } from "./user.model";
 import { ITrigger } from './trigger.interface';
 import { GenericRecord } from "./genericrecord.model";
+import { GenericEvent } from "./genericevent.model";
 
 export class GenericEvaluable {
     name:string;
 
-    async evaluate(user: User | null, curTime:Date, metaObject?:Object):Promise<GenericRecord>{
+    async evaluate(user: User | null, curTime:Date, eventObj?:GenericEvent, metaObject?:Object):Promise<GenericRecord>{
         return await this.generateRecord({}, curTime);
     }
 

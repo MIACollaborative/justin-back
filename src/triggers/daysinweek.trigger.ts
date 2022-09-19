@@ -14,6 +14,7 @@ import { AllConditionArbiter } from '../arbiters/allcondition.arbiter';
 export default class DaysInWeekTrigger implements ITrigger {
 
     name: string = "DaysInWeekTrigger";
+    type: string = "standard";
     
     // private members
     #shouldRunRecord: GenericRecord;
@@ -36,7 +37,7 @@ export default class DaysInWeekTrigger implements ITrigger {
 
         conditionList.push(tCondition);
         
-        return await new AllConditionArbiter().evaluate(user, curTime, {evaluableList: conditionList});
+        return await new AllConditionArbiter().evaluate(user, curTime, undefined, {evaluableList: conditionList});
 
         // version 3: separate shceckpoint and the rest
         //let isValidResult = await this.isValidCheckpoint(user, curTime);

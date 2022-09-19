@@ -12,6 +12,7 @@ import { NoActionDecisionRecord } from '../models/noaction.decisionrecord';
 export default class UserTimePrefTrigger implements ITrigger {
 
     name: string = "UserTimePrefTrigger";
+    type: string = "standard";
 
     // private members
     #shouldRunRecord: GenericRecord;
