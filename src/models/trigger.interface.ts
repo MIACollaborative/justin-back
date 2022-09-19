@@ -12,7 +12,7 @@ export interface ITrigger {
     getName(): string;
 
     // public, but only get called if further customization is needed
-    shouldRun(user: User, curTime: Date): Promise<GenericRecord>; //: boolean; 
+    shouldRun(user: User, curTime: Date, eventObj?:Object): Promise<GenericRecord>; //: boolean; 
     getProbability(user: User, curTime: Date): Promise<GenericRecord>; //: number
     doAction(user: User, curTime: Date): Promise<GenericRecord>; // for now
     generateRecord(user: User, curTime: Date, shouldRunRecord:GenericRecord, probabilityRecord?:GenericRecord, actionRecord?:GenericRecord):TriggerRecord;

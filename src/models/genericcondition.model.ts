@@ -6,6 +6,7 @@ import { GenericEvaluable } from "./genericevaluable.model";
 
 export class GenericCondition extends GenericEvaluable {
     forValidity: boolean = false;
+    type: string = "standard";
 
     generateRecord( recordObj:Object, curTime: Date):GenericRecord{
         return new GenericRecord({...recordObj, validity: this.forValidity? recordObj["value"]: true}, curTime);
