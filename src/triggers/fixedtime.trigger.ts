@@ -9,13 +9,15 @@ import { NoActionDecisionRecord } from '../models/noaction.decisionrecord';
 import DesktopNotificationAction from '../actions/desktopnotification.action';
 import { GenericCondition } from '../models/genericcondition.model';
 import { AllConditionArbiter } from '../arbiters/allcondition.arbiter';
+import { GenericEvent } from '../models/genericevent.model';
 
 export default class FixedTimeTrigger implements ITrigger {
 
     name: string = "FixedTimeTrigger";
+    type: string = "standard";
     
     // private members
-    #shouldRunRecord: GenericRecord;
+    #shouldDecideRecord: GenericRecord;
     #probabilityRecord: GenericRecord;
     #actionRecord: GenericRecord;
 
@@ -26,16 +28,18 @@ export default class FixedTimeTrigger implements ITrigger {
 
 
 
-    async shouldRun(user: User, curTime: Date): Promise<GenericRecord> {
+
+    async shouldDecide(user: User, event:GenericEvent): Promise<GenericRecord> {
+        let curTime = event.providedTimestamp;
 
         // version 4: use arbiter directly
         let conditionList:GenericCondition[] = [];
 
-        let tCondition = FixedTimeTriggerCondition.fromSpec({targetTimeString: "12:12 PM", forValidity: true});
+        let tCondition = FixedTimeTriggerCondition.fromSpec({targetTimeString: "05:00 PM", forValidity: true});
 
         conditionList.push(tCondition);
         
-        return await new AllConditionArbiter().evaluate(user, curTime, {evaluableList: conditionList});
+        return await new AllConditionArbiter().evaluate(user, event, {evaluableList: conditionList});
 
         // version 3: use TriggerCondition
         /*
@@ -59,15 +63,16 @@ export default class FixedTimeTrigger implements ITrigger {
         */
     }
 
-    async getProbability(user: User, curTime: Date): Promise<GenericRecord> {
-        return new GenericRecord({ value: 1.0 }, curTime);
+    async decide(user: User, event:GenericEvent): Promise<GenericRecord> {
+        return new GenericRecord({ value: 1.0 }, event.providedTimestamp);
     }
 
-    async doAction(user: User, curTime: Date): Promise<GenericRecord> {
+    async doAction(user: User, event:GenericEvent): Promise<GenericRecord> {
         console.log('[Trigger] ', this.getName(), '.doAction()');
+        let curTime = event.providedTimestamp;
         
         let title = `[${this.getName()}]`;
-        let message: string = `Hi ${user.getName()}. It's ${this.#shouldRunRecord["record"]["targetTimeString"]}`;
+        let message: string = `Hi ${user.getName()}. It's ${this.#shouldDecideRecord["record"]["targetTimeString"]}`;
         
         let aAction = new DesktopNotificationAction({
             title: title,

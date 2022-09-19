@@ -1,10 +1,10 @@
 
 import { User } from '../models/user.model';
 import { GenericRecord } from '../models/genericrecord.model';
-import { ITriggerCondition } from '../models/triggercondition.interface';
 import GeneralUtility from '../utilities/generalutilities';
 import { DateTime } from 'luxon';
 import { GenericCondition } from '../models/genericcondition.model';
+import { GenericEvent } from '../models/genericevent.model';
 
 export default class DaysInAWeekTriggerCondition extends GenericCondition {
 
@@ -19,7 +19,8 @@ export default class DaysInAWeekTriggerCondition extends GenericCondition {
         this.forValidity = forValidity;
     }
 
-    async evaluate(user: User | null, curTime: Date): Promise<GenericRecord> {
+    async evaluate(user: User | null, event:GenericEvent): Promise<GenericRecord> {
+        let curTime = event.providedTimestamp;
         console.log(`[Condition]`, this.getName(), `daysInWeekIndexList`, this.#daysInWeekIndexList);
 
         let result = false;

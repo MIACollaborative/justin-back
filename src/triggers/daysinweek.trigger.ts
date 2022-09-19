@@ -10,13 +10,15 @@ import DesktopNotificationAction from '../actions/desktopnotification.action';
 import DaysInAWeekTriggerCondition from '../conditions/daysinweek.triggercondition';
 import { GenericCondition } from '../models/genericcondition.model';
 import { AllConditionArbiter } from '../arbiters/allcondition.arbiter';
+import { GenericEvent } from '../models/genericevent.model';
 
 export default class DaysInWeekTrigger implements ITrigger {
 
     name: string = "DaysInWeekTrigger";
+    type: string = "standard";
     
     // private members
-    #shouldRunRecord: GenericRecord;
+    #shouldDecideRecord: GenericRecord;
     #probabilityRecord: GenericRecord;
     #actionRecord: GenericRecord;
 
@@ -25,9 +27,12 @@ export default class DaysInWeekTrigger implements ITrigger {
         return this.name;
     }
 
+    
 
 
-    async shouldRun(user: User, curTime: Date): Promise<GenericRecord> {
+
+    async shouldDecide(user: User, event:GenericEvent): Promise<GenericRecord> {
+        let curTime = event.providedTimestamp;
 
         // version 4: use arbiter directly
         let conditionList:GenericCondition[] = [];
@@ -36,7 +41,7 @@ export default class DaysInWeekTrigger implements ITrigger {
 
         conditionList.push(tCondition);
         
-        return await new AllConditionArbiter().evaluate(user, curTime, {evaluableList: conditionList});
+        return await new AllConditionArbiter().evaluate(user, event, {evaluableList: conditionList});
 
         // version 3: separate shceckpoint and the rest
         //let isValidResult = await this.isValidCheckpoint(user, curTime);
@@ -70,16 +75,17 @@ export default class DaysInWeekTrigger implements ITrigger {
 
 
 
-    async getProbability(user: User, curTime: Date): Promise<GenericRecord> {
-        return new GenericRecord({ value: 1.0 }, curTime);
+    async decide(user: User, event:GenericEvent): Promise<GenericRecord> {
+        return new GenericRecord({ value: 1.0 }, event.providedTimestamp);
     }
 
-    async doAction(user: User, curTime: Date): Promise<GenericRecord> {
+    async doAction(user: User, event:GenericEvent): Promise<GenericRecord> {
         console.log('[Trigger] ', this.getName(), '.doAction()'); 
+        let curTime = event.providedTimestamp;
 
         
         let title = `[${this.getName()}]`;
-        let message: string = `Hi ${user.getName()}. It's one among ${this.#shouldRunRecord["record"]["daysInWeekIndexList"]}`;
+        let message: string = `Hi ${user.getName()}. It's one among ${this.#shouldDecideRecord["record"]["daysInWeekIndexList"]}`;
         
         let aAction = new DesktopNotificationAction({
             title: title,

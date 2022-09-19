@@ -5,19 +5,21 @@ import { GenericEvaluable } from "../models/genericevaluable.model";
 import { GenericArbiter } from "../models/genericarbiter.model";
 import { GenericCondition } from "../models/genericcondition.model";
 import GeneralUtility from "../utilities/generalutilities";
+import { GenericEvent } from "../models/genericevent.model";
 
 export class AllConditionArbiter extends GenericArbiter {
 
     name: string = "AllConditionArbiter";
 
-    async evaluate(user:User, curTime:Date, metaObject:{evaluableList: GenericCondition[]}):Promise<GenericRecord>{
+    async evaluate(user:User, event:GenericEvent, metaObject:{evaluableList: GenericCondition[]}):Promise<GenericRecord>{
         let conditionEvaluationResultList:GenericRecord[] = [];
         for(let i = 0 ; i < metaObject.evaluableList.length; i++){
             let condition:GenericCondition = metaObject.evaluableList[i];
-            let resultRecord:GenericRecord = await condition.evaluate(user, curTime);
+            let resultRecord:GenericRecord = await condition.evaluate(user, event);
             conditionEvaluationResultList.push(resultRecord);
 
             // if we want to speed thing up by enforcing validity to be true
+            console.log(`${this.name}.evaluate(${condition.getName()}): validity: ${resultRecord['record']['validity']}`);
             if(!resultRecord['record']['validity']){
                 // stop as soon as we find one condition to be invalid
                 // (meaning, the triiger was not even worth of considering)
@@ -48,7 +50,7 @@ export class AllConditionArbiter extends GenericArbiter {
         validity = GeneralUtility.reduceBooleanArray(validityList, "and");
 
 
-        return new GenericRecord({value: result, validity: validity,  recordList: conditionEvaluationResultList}, curTime);
+        return new GenericRecord({value: result, validity: validity,  recordList: conditionEvaluationResultList}, event.providedTimestamp);
     }
 
 
