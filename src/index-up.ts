@@ -10,7 +10,7 @@ dotenv.config();
 var cookieParser = require('cookie-parser');
 var createError = require('http-errors');
 var morgan = require('morgan');
-var logger = morgan('combined')
+var logger = morgan('combined'); //dev
 
 const session = require("express-session");
 
@@ -22,7 +22,7 @@ const app: Express = express();
 const port = process.env.PORT;
 
 
-app.use(logger('dev'));
+app.use(logger);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
