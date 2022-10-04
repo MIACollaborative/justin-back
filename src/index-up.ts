@@ -1,27 +1,25 @@
 import express, { Express, Request, Response } from 'express';
-import passport from "passport";
+var passport = require('passport');
 var Strategy = require('passport-http-bearer').Strategy;
 //import {Strategy} from "passport-http-bearer";
 import dotenv from 'dotenv';
-var db = require('./db');
+//var db = require('./db');
 
 dotenv.config();
 
-import cookieParser from "cookie-parser";
-import createError from "http-errors";
-import logger from "morgan";
-import session from "express-session";
-import MongoStore from "connect-mongo";
+var cookieParser = require('cookie-parser');
+var createError = require('http-errors');
+var morgan = require('morgan');
+var logger = morgan('combined')
+
+const session = require("express-session");
+
+const MongoStore = require("connect-mongo");
+//var indexRouter = require('./routes/index');
+var authRouter = require('./routes/auth');
 
 const app: Express = express();
 const port = process.env.PORT;
-
-
-
-
-
-
-
 
 
 app.use(logger('dev'));
@@ -38,9 +36,10 @@ app.use(session({
     mongoUrl: process.env.DB_CONN_STRING
   })
 }));
+
 app.use(passport.authenticate('session'));
 
-app.use('/', indexRouter);
+//app.use('/', indexRouter);
 app.use('/', authRouter);
 
 // catch 404 and forward to error handler
@@ -57,4 +56,8 @@ app.use(function(err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render('error');
+});
+
+app.listen(port, () => {
+    console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
 });

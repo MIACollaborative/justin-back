@@ -5,6 +5,7 @@
   "author": "Pei-Yao Hung",
   "license": "MIT",
   "scripts": {
+    "index-up": "ts-node-dev --respawn --pretty --transpile-only ./src/index-up.ts",
     "serve": "ts-node-dev --respawn --pretty --transpile-only ./src/index.ts",
     "dev": "ts-node-dev --respawn --pretty --transpile-only ./src/main.ts",
     "test": "ts-node-dev --respawn --pretty --transpile-only ./src/tests/testrunner.ts",
