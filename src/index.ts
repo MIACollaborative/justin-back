@@ -2,10 +2,12 @@ import express, { Express, Request, Response } from 'express';
 import passport from "passport";
 var Strategy = require('passport-http-bearer').Strategy;
 import { loadTestUsers } from './tests/loadusers.tests';
+import { loadTestResponses } from './tests/loadresponses.tests';
 //var BearerStrategy = require('passport-http-bearer').BearerStrategy;
 //import {Strategy} from "passport-http-bearer";
 import dotenv from 'dotenv';
 import * as userService from './db/users.service';
+import * as responseService from "./db/responses.service";
 import { User } from './models/user.model';
 
 // this mostly likely has to be at the top, below import
@@ -13,12 +15,13 @@ dotenv.config();
 
 
 
-var db = require('./db');
+//var db = require('./db');
 
 
 
 
 loadTestUsers();
+loadTestResponses();
 
 // Configure the Bearer strategy for use by Passport.
 //
@@ -105,9 +108,9 @@ app.get('/users/:userName',
 
 app.get('/users/:userName/responses',
   passport.authenticate('bearer', { session: false }),
-  function(req, res) {
-    //console.log(`req: ${JSON.stringify(req, null, 2)}`);
-    res.json(req.params);
+  async function(req, res) {
+    let items = await responseService.getResponseByParticipantId(req.params.userName);
+    res.json(items);
   }
 );
 
