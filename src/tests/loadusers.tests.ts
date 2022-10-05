@@ -58,8 +58,8 @@ userState['semanticLocation'] = {
 
 
 const testUsers = [
-    new User('participant1', 'Pei-Yao Hung', 'peiyaoh@umich.edu', '543', "abcdefghi"),
-    new User('participant2', 'Mark Newman', 'mwnewman@umich.edu', '123', "123456789", studyParams, userPrefs, userState),
+    new User( 'participant1','Pei-Yao Hung', 'peiyaoh@umich.edu', '123', "abcdefghi"),
+    new User( 'participant2','Mark Newman', 'mwnewman@umich.edu', '456', "123456789", studyParams, userPrefs, userState),
     /*
     new User('Mark Newman', 'mwnewman@umich.edu', '123', studyParams, userPrefs, userState),
     new User('Pedja Klasnja', 'klasnja@umich.edu', '234'),

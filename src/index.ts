@@ -87,21 +87,29 @@ app.get('/users',
     let users = await userService.getAllUsers();
     let userNameList = users.map((userInfo) => {return userInfo?.getUsername()});
     res.json(userNameList);
-});
+  }
+);
 
 app.get('/users/:userName',
   passport.authenticate('bearer', { session: false }),
-  function(req, res) {
+  async function(req, res) {
     //console.log(`req: ${JSON.stringify(req, null, 2)}`);
-    res.json(req.params);
-});
+    let users = await userService.getAllUsers();
+    let userList = users.filter((userInfo) => {return userInfo?.getUsername() == req.params.userName;});
+    if(userList.length > 0 ){
+      return res.json({...userList[0], token:null, email: null, name:null});
+    }
+    res.json({});
+  }
+);
 
 app.get('/users/:userName/responses',
   passport.authenticate('bearer', { session: false }),
   function(req, res) {
     //console.log(`req: ${JSON.stringify(req, null, 2)}`);
     res.json(req.params);
-});
+  }
+);
 
 // version 1: no authentication
 /*
