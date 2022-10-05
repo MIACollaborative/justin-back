@@ -109,7 +109,12 @@ app.get('/users/:userName',
 app.get('/users/:userName/responses',
   passport.authenticate('bearer', { session: false }),
   async function(req, res) {
-    let items = await responseService.getResponseByParticipantId(req.params.userName);
+    const orderBy = req.query["orderBy"] != undefined? String(req.query["orderBy"]): "_id";
+    const order = req.query["order"] != undefined? String(req.query["order"]): "asc";
+    const limit = req.query["limit"] != undefined? Number(req.query["limit"]): 0;
+
+
+    let items = await responseService.getResponseByParticipantId(req.params.userName, limit, orderBy, order);
     res.json(items);
   }
 );

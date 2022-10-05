@@ -38,10 +38,10 @@ export async function getResponseById(id: string) {
     return UserResponse.fromMongoDoc(aDoc);
 }
 
-export async function getResponseByParticipantId(id: string) {
+export async function getResponseByParticipantId(id: string, limit: number = 0, orderBy:string="_id", order:string="asc" ) {
     let uColl = await getResponseCollection();
     let objId = new ObjectId(id);
-    let allDocs = await uColl.find({participantId: id}).toArray();
+    let allDocs = await uColl.find({participantId: id}).sort({[orderBy]: order == "asc"? 1: -1}).limit(limit).toArray();
     let docs = allDocs.map(aDoc => UserResponse.fromMongoDoc(aDoc));
     return docs;
 }
