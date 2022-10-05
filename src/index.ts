@@ -96,6 +96,13 @@ app.get('/users/:userName',
     res.json(req.params);
 });
 
+app.get('/users/:userName/responses',
+  passport.authenticate('bearer', { session: false }),
+  function(req, res) {
+    //console.log(`req: ${JSON.stringify(req, null, 2)}`);
+    res.json(req.params);
+});
+
 // version 1: no authentication
 /*
 app.get('/', (req: Request, res: Response) => {
