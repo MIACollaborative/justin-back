@@ -109,6 +109,7 @@ app.get('/users/:userName',
 app.get('/users/:userName/responses',
   passport.authenticate('bearer', { session: false }),
   async function(req, res) {
+    console.log('/users/:userName/responses');
     const orderBy = req.query["orderBy"] != undefined? String(req.query["orderBy"]): "_id";
     const order = req.query["order"] != undefined? String(req.query["order"]): "asc";
     const limit = req.query["limit"] != undefined? Number(req.query["limit"]): 0;
