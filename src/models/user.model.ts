@@ -2,24 +2,30 @@ import { ObjectId } from 'mongodb';
 import { isNull } from 'util';
 
 export class User {
-
+    private username: string;
     private email: string;
     private name: string;
     private id: string;
+    private token: string;
     private studyParams: Object | undefined;
     private prefs: Object | undefined;
     private state: Object | undefined;
 
-    constructor(name: string,
+    constructor(
+        username: string,
+        name: string,
         email: string, 
         id: string, 
+        token: string, 
         params?: Object,
         prefs?: Object,
         state?: Object) {
+            this.username = username;
             this.name = name;
             this.email = email;
             this.studyParams = params;
             this.id = id;
+            this.token = token;
             this.prefs = prefs;
             this.state = state;
     }
@@ -29,13 +35,20 @@ export class User {
         if (mongoDoc === null) return null;
 
         let id = mongoDoc['_id'].toString();
-        return new User(mongoDoc['email'], 
+        return new User(
+            mongoDoc['username'], 
             mongoDoc['name'], 
+            mongoDoc['email'], 
             id, 
+            mongoDoc['token'],
             mongoDoc['studyParams'],
             mongoDoc['prefs'], 
             mongoDoc['state']);
 
+    }
+
+    public getUsername() {
+        return this.username;
     }
 
     public getName() {
@@ -48,6 +61,10 @@ export class User {
 
     public getEmail(): string {
         return this.email;
+    }
+
+    public getToken() {
+        return this.token;
     }
 
     public getStudyParams(): Object | undefined {
