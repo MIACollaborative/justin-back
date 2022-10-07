@@ -39,8 +39,9 @@ export default class FixedTimeTrigger implements ITrigger {
 
         conditionList.push(tCondition);
         
-        return await new AllConditionArbiter().evaluate(user, event, {evaluableList: conditionList});
+        this.#shouldDecideRecord =  await new AllConditionArbiter().evaluate(user, event, {evaluableList: conditionList});
 
+        return this.#shouldDecideRecord;
         // version 3: use TriggerCondition
         /*
         let tCondition = FixedTimeTriggerCondition.fromSpec({targetTimeString: "12:12 PM", forValidity: true});
@@ -68,16 +69,20 @@ export default class FixedTimeTrigger implements ITrigger {
     }
 
     async doAction(user: User, event:GenericEvent): Promise<GenericRecord> {
-        console.log('[Trigger] ', this.getName(), '.doAction()');
+        console.log(`[Trigger] ', ${this.getName()}, '.doAction() - event: ${JSON.stringify(event)}`);
         let curTime = event.providedTimestamp;
+        console.log(`[curTime]: ${curTime}, target: ${JSON.stringify(this.#shouldDecideRecord)}`);
         
         let title = `[${this.getName()}]`;
-        let message: string = `Hi ${user.getName()}. It's ${this.#shouldDecideRecord["record"]["targetTimeString"]}`;
+        let message: string = `Hi ${user.getName()}. It's ${this.#shouldDecideRecord["record"]["recordList"][0]["record"]["targetTimeString"]}`;
+        console.log(`[Action]: ${message}`);
+        
         
         let aAction = new DesktopNotificationAction({
             title: title,
             message: message
         });
+        
 
         //let message: string = selectMessage(user, curTime).text;
         //let actionResult = await createDesktopNotification(`[${this.getName()}]`, message);

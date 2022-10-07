@@ -10,15 +10,15 @@ export class TimeZoneState {
     private upateAt: Date;
 
     constructor(gmtOffset:number){
-        this.setGMTOFfset(gmtOffset);
+        this.setGMTOffset(gmtOffset);
     }
 
-    setGMTOFfset(gmtOffset:number){
+    setGMTOffset(gmtOffset:number){
         this.gmtOffsetInMinutes = gmtOffset;
         this.setUpdateAt(new Date());
     }
 
-    getGMTOffset(){
+    getGMTOffsetInMinutes(){
         return this.gmtOffsetInMinutes;
     }
 

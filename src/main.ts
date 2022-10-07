@@ -26,8 +26,10 @@ export async function doTick(curTime: Date) {
 
     let clockEvent = new  GenericEvent("clock", "system", curTime);
 
+    console.log(`users.length: ${users.length }`);
     for (let u of users) {
         u = u as User;
+        console.log(`[${u.getName()}]---------------------------------------------------`);
         for (let t of triggers) {
             // version 3: roll back to version 1
             let shouldRunRecord = await t.shouldDecide(u,clockEvent);

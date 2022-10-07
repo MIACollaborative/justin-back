@@ -35,7 +35,6 @@ async function doTests() {
         let cronTime = process.hrtime();
         console.log(`execute cron task ${theExpression.label} at ${cronTime}`);
 
-
         let t1 = process.hrtime();
         await doTick(new Date(2022, 8, 19, 17, 0, 0));
         //await doTick(new Date());

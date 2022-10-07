@@ -20,4 +20,14 @@ function zoneNameToOffset(zoneName: string): number{
     return DateTime.now().setZone(zoneName).offset;
 }
 
+let zoneName = DateTime.now().toUTC(-240).zoneName;
+
+let datetime = DateTime.fromFormat("05:00 PM", "t", { zone: zoneName });
+console.log(`initializeDateWithHourMinuteStringWithOffset: result: ${datetime}, zoneName: ${datetime.zoneName}`);
+
+zoneName = DateTime.now().toUTC(-420).zoneName;
+
+datetime = DateTime.fromFormat("05:00 PM", "t", { zone: zoneName });
+console.log(`initializeDateWithHourMinuteStringWithOffset: result: ${datetime}, zoneName: ${datetime.zoneName}`);
+
 

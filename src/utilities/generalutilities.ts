@@ -13,7 +13,20 @@ export default class GeneralUtility {
     }
 
     static initializeDateWithHourMinuteString(hourMinuteString:string, timeszoneString: string):Date {
+        console.log(`initializeDateWithHourMinuteString: ${hourMinuteString}, ${timeszoneString}`);
         let datetime = DateTime.fromFormat(hourMinuteString, "t", { zone: timeszoneString });
+
+        return datetime.toJSDate();
+    }
+
+    static initializeDateWithHourMinuteStringWithOffset(hourMinuteString:string, offset: number):Date {
+        console.log(`initializeDateWithHourMinuteStringWithOffset: ${hourMinuteString}, ${offset}`);
+
+        let zoneName = DateTime.now().toUTC(offset).zoneName;
+
+        let datetime = DateTime.fromFormat(hourMinuteString, "t", { zone: zoneName });
+
+        console.log(`initializeDateWithHourMinuteStringWithOffset: result: ${datetime}`);
 
         return datetime.toJSDate();
     }
@@ -67,7 +80,7 @@ export default class GeneralUtility {
         return newDateTime.toJSDate();
     }
 
-    static syncDatesBeforeUnit(date1:Date, date2:Date, unitString:DateTimeUnit): Date[] {
+    static syncToFirstDateBeforeUnit(date1:Date, date2:Date, unitString:DateTimeUnit): Date[] {
 
         let unitIndex = GeneralUtility.unitList.indexOf(unitString);
 
