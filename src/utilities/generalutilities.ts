@@ -8,6 +8,10 @@ export default class GeneralUtility {
         return DateTime.fromJSDate(date).setZone(timezone);
     }
 
+    static timezoneNameToOffset(zoneName: string): number{
+        return DateTime.now().setZone(zoneName).offset;
+    }
+
     static initializeDateWithHourMinuteString(hourMinuteString:string, timeszoneString: string):Date {
         let datetime = DateTime.fromFormat(hourMinuteString, "t", { zone: timeszoneString });
 

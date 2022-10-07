@@ -12,19 +12,20 @@ export class User {
     private state: Object | undefined;
 
     constructor(
+        id: string, 
         username: string,
         name: string,
         email: string, 
-        id: string, 
         token: string, 
         params?: Object,
         prefs?: Object,
         state?: Object) {
+            this.id = id;
             this.username = username;
             this.name = name;
             this.email = email;
             this.studyParams = params;
-            this.id = id;
+            
             this.token = token;
             this.prefs = prefs;
             this.state = state;
@@ -36,10 +37,10 @@ export class User {
 
         let id = mongoDoc['_id'].toString();
         return new User(
+            id, 
             mongoDoc['username'], 
             mongoDoc['name'], 
             mongoDoc['email'], 
-            id, 
             mongoDoc['token'],
             mongoDoc['studyParams'],
             mongoDoc['prefs'], 
