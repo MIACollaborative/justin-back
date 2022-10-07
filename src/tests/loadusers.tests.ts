@@ -1,5 +1,6 @@
 import { User } from "../models/user.model";
 import { clearUsers, addUser, getUserById } from '../db/users.service';
+import { TimeZoneState } from "../dataModels/state/timezoneState.model";
 
 const studyParams = {
     studyId: 'justin-example-1',
@@ -37,7 +38,7 @@ userPrefs['messageTimePrefs'] = {
 }
 
 const userState = {};
-
+/*
 userState['weatherForecast'] = {
     value: 'OUTDOOR',
     updated: new Date()
@@ -55,12 +56,15 @@ userState['semanticLocation'] = {
     value: 'Home', 
     updated: new Date()
 }
+*/
 
+userState['timezone'] = new TimeZoneState(-240);
 
 export const testUsers = [
-    new User( 'participant1','Pei-Yao Hung', 'peiyaoh@umich.edu', '123', "abcdefghi"),
-    new User( 'participant2','Mark Newman', 'mwnewman@umich.edu', '456', "123456789", studyParams, userPrefs, userState),
+    new User('123', 'participant1','Pei-Yao Hung', 'peiyaoh@umich.edu', "abcdefghi", {}, {}, userState),
+    new User('456', 'participant2','Mark Newman', 'mwnewman@umich.edu', "123456789", {}, {}, {'timezone': TimeZoneState.fromZoneName("America/Los_Angeles")}),
     /*
+    new User('456', 'participant2','Mark Newman', 'mwnewman@umich.edu', "123456789", studyParams, userPrefs, userState),
     new User('Mark Newman', 'mwnewman@umich.edu', '123', studyParams, userPrefs, userState),
     new User('Pedja Klasnja', 'klasnja@umich.edu', '234'),
     new User('Patrick Neggie', 'patmn@umich.edu', '345'),
