@@ -36,7 +36,7 @@ async function doTests() {
         console.log(`execute cron task ${theExpression.label} at ${cronTime}`);
 
         let t1 = process.hrtime();
-        await doTick(new Date(2022, 8, 19, 17, 0, 0));
+        await doTick(new Date(2022, 8, 19, 20, 0, 0));
         //await doTick(new Date());
         let t2 = process.hrtime();
         console.log('did tick in', (t2[1] - t1[1]) / 1000000, 'ms');
