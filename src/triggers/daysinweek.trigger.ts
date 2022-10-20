@@ -34,6 +34,7 @@ export default class DaysInWeekTrigger implements IEventTrigger {
     }
 
     async shouldDecide(user: User, event:GenericEvent): Promise<GenericRecord> {
+        console.log('[Trigger] ', this.getName(), '.shouldDecide()', user.getName()); 
         let curTime = event.providedTimestamp;
 
         // version 4: use arbiter directly
