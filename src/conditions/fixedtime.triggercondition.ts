@@ -5,6 +5,7 @@ import GeneralUtility from '../utilities/generalutilities';
 import { GenericCondition } from '../models/genericcondition.model';
 import { GenericEvent } from '../models/genericevent.model';
 import { TimeZoneState } from '../dataModels/state/timezoneState.model';
+import { GenericEventCondition } from '../models/genericeventcondition.model';
 
 
 // implements ITriggerCondition
@@ -15,9 +16,10 @@ function staticImplements<T>() {
 @staticImplements<ITriggerConditionStatic>()
 */
 
-export default class FixedTimeTriggerCondition extends GenericCondition {
+export default class FixedTimeTriggerCondition extends GenericEventCondition {
 
     name: string = "FixedTimeTriggerCondition";
+    eventName: string = "clock";
 
     #targetTimeString: string = "12:04 PM";
 
@@ -29,7 +31,13 @@ export default class FixedTimeTriggerCondition extends GenericCondition {
 
     async evaluate(user: User, event: GenericEvent): Promise<GenericRecord> {
         console.log(`[Condition]`, this.getName(), `targetTimeString`, this.#targetTimeString);
+
         let curTime = event.providedTimestamp;
+
+        
+        if( event.name != this.eventName){
+            return this.generateRecord({ value: false }, curTime);
+        }
 
         // assuming this is the user timezone
         // next step: retrieving it from the user state?

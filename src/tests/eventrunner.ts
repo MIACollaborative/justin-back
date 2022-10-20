@@ -31,8 +31,12 @@ nodeCron.schedule(theExpression.expression, async () => {
     console.log(`execute cron clock event generation task ${theExpression.label} at ${cronTime}`);
     let t1 = process.hrtime();
 
-    let now = DateTime.now();
-    let cEvent = new ClockEvent("clock", "system-user", now.toJSDate());
+    // for testing: 2022-09-19 08:00 PM
+    let now = new Date(2022, 8, 19, 20, 0, 0);
+    
+    // for real
+    //let now = DateTime.now().toJSDate();
+    let cEvent = new ClockEvent("clock", "system-user", now);
 
     console.log(`Clock event: ${JSON.stringify(cEvent)}`);
 
@@ -65,6 +69,7 @@ async function doTests() {
         //await doTick(new Date(2022, 7, 26, 17, 1, 0));
         //await doTick(new Date());
 
+        console.log(`About to doEvent: ${event.fullDocument}`);
         await doEvent(new Date(), event.fullDocument);
 
         // now, mark the event as done

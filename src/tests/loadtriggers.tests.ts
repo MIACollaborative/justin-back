@@ -2,7 +2,7 @@ import { User } from "../models/user.model";
 import { clearTriggers, addTrigger } from '../db/studyconfig.service';
 
 const testTriggers = [
-    'fixedtime.trigger'
+    'fixedtime.trigger', 'daysinweek.trigger'
     /* 'nonexistent.trigger', 'usertimepref.trigger',  'fixedtime.trigger', 'daysinweek.trigger', "daysinweekfixedtime.trigger", "eventname.trigger"*/
 ]
 
