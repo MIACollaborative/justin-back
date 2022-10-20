@@ -51,7 +51,7 @@ export default class FixedTimeTrigger implements IEventTrigger {
         // version 4: use arbiter directly
         let conditionList:GenericCondition[] = [];
 
-        let tCondition = FixedTimeTriggerCondition.fromSpec({targetTimeString: "05:00 PM", forValidity: true});
+        let tCondition = FixedTimeTriggerCondition.fromSpec({targetTimeString: "11:55 PM", forValidity: true});
 
         conditionList.push(tCondition);
         

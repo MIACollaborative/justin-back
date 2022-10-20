@@ -32,7 +32,7 @@ nodeCron.schedule(theExpression.expression, async () => {
     let t1 = process.hrtime();
 
     // for testing: 2022-09-19 08:00 PM
-    let now = new Date(2022, 8, 19, 20, 0, 0);
+    let now = new Date(2022, 8, 19, 2, 55, 0); //EDT/EST
     
     // for real
     //let now = DateTime.now().toJSDate();

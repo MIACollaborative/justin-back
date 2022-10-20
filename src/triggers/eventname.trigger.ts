@@ -12,8 +12,9 @@ import { GenericCondition } from '../models/genericcondition.model';
 import { AllConditionArbiter } from '../arbiters/allcondition.arbiter';
 import EventNameTriggerCondition from '../conditions/eventname.triggercondition';
 import { GenericEvent } from '../models/genericevent.model';
+import { IEventTrigger } from '../models/eventtrigger.interface';
 
-export default class EventNameTrigger implements ITrigger {
+export default class EventNameTrigger implements IEventTrigger {
 
     name: string = "EventNameTrigger";
     type: string = "event";
@@ -23,11 +24,15 @@ export default class EventNameTrigger implements ITrigger {
     #probabilityRecord: GenericRecord;
     #actionRecord: GenericRecord;
 
-    #eventName: string;
+    eventName: string;
 
 
     getName(): string {
         return this.name;
+    }
+
+    getEventName(): string{
+        return this.eventName;
     }
 
 
@@ -37,9 +42,9 @@ export default class EventNameTrigger implements ITrigger {
         // version 4: use arbiter directly
         let conditionList:GenericCondition[] = [];
 
-        this.#eventName = "MyRandomEvent1";
+        this.eventName = "clock";// "MyRandomEvent1";
 
-        let tCondition = EventNameTriggerCondition.fromSpec({eventName: this.#eventName, forValidity: true});
+        let tCondition = EventNameTriggerCondition.fromSpec({eventName: this.eventName, forValidity: true});
 
         conditionList.push(tCondition);
 
@@ -60,7 +65,7 @@ export default class EventNameTrigger implements ITrigger {
 
         
         let title = `[${this.getName()}]`;
-        let message: string = `Hi ${user.getName()}. This event [${this.#eventName}] just happened!`;
+        let message: string = `Hi ${user.getName()}. This event [${this.eventName}] just happened!`;
         
         let aAction = new DesktopNotificationAction({
             title: title,

@@ -12,11 +12,13 @@ import GeneralUtility from '../utilities/generalutilities';
 import { GenericCondition } from '../models/genericcondition.model';
 import { AllConditionArbiter } from '../arbiters/allcondition.arbiter';
 import { GenericEvent } from '../models/genericevent.model';
+import { IEventTrigger } from '../models/eventtrigger.interface';
 
-export default class DaysInWeekFixedTimeTrigger implements ITrigger {
+export default class DaysInWeekFixedTimeTrigger implements IEventTrigger {
 
     name: string = "DaysInWeekFixedTimeTrigger";
-    type: string = "standard";
+    type: string = "event";
+    eventName: string = "clock";
     
     // private members
     #shouldRunRecord: GenericRecord;
@@ -28,11 +30,15 @@ export default class DaysInWeekFixedTimeTrigger implements ITrigger {
         return this.name;
     }
 
+    getEventName(): string {
+        return this.eventName;
+    }
+
     async shouldDecide(user: User, event:GenericEvent): Promise<GenericRecord> {
         let curTime = event.providedTimestamp;
         let conditionList:GenericCondition[] = [];
 
-        conditionList.push(FixedTimeTriggerCondition.fromSpec({targetTimeString: "05:00 pM", forValidity: true}));
+        conditionList.push(FixedTimeTriggerCondition.fromSpec({targetTimeString: "11:55 PM", forValidity: true}));
         conditionList.push(DaysInAWeekTriggerCondition.fromSpec({daysInWeekIndexList: [1,3], forValidity: true}));
         
         return await new AllConditionArbiter().evaluate(user, event, {evaluableList: conditionList});
