@@ -6,8 +6,9 @@ import { GenericEventSubscriber } from "../models/genericeventsubscriber.model";
 import { GenericEvent } from "../models/genericevent.model";
 import nodeCron from "node-cron";
 import { DateTime } from "luxon";
-import { ClockEvent } from "../models/clockevent.model";
+import { ClockEvent } from "../events/clockevent.model";
 import { addEvent, archiveEvent} from '../db/events.service';
+import { UserResponseEvent } from "../events/userresponseevent.model";
 
 
 dotenv.config();
@@ -36,7 +37,8 @@ nodeCron.schedule(theExpression.expression, async () => {
     
     // for real
     //let now = DateTime.now().toJSDate();
-    let cEvent = new ClockEvent("clock", "system-user", now);
+    //let cEvent = new ClockEvent("clock", "system-user", now);
+    let cEvent = new UserResponseEvent("user-response", "participant1", now, "survey", "testSurveyId");
 
     console.log(`Clock event: ${JSON.stringify(cEvent)}`);
 

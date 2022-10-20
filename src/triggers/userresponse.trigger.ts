@@ -13,12 +13,13 @@ import { AllConditionArbiter } from '../arbiters/allcondition.arbiter';
 import EventNameTriggerCondition from '../conditions/eventname.triggercondition';
 import { GenericEvent } from '../models/genericevent.model';
 import { IEventTrigger } from '../models/eventtrigger.interface';
+import ResponseTypeAndIdTriggerCondition from '../conditions/responseidtype.triggercondition';
 
-export default class EventNameTrigger implements IEventTrigger {
+export default class UserResponseTrigger implements IEventTrigger {
 
-    name: string = "EventNameTrigger";
+    name: string = "UserResponseTrigger";
     type: string = "event";
-    eventName: string = "MyRandomEvent1"
+    eventName: string = "user-response"
     
     // private members
     #shouldDecideRecord: GenericRecord;
@@ -44,7 +45,7 @@ export default class EventNameTrigger implements IEventTrigger {
 
         this.eventName = "clock";// "MyRandomEvent1";
 
-        let tCondition = EventNameTriggerCondition.fromSpec({eventName: this.eventName, forValidity: true});
+        let tCondition = ResponseTypeAndIdTriggerCondition.fromSpec({responseType: "survey", responseId: "testSurveyId", forValidity: true});
 
         conditionList.push(tCondition);
 

@@ -1,7 +1,7 @@
-import { User } from "./user.model";
-import { ITrigger } from './trigger.interface';
-import { GenericRecord } from "./genericrecord.model";
-import { GenericEvent } from "./genericevent.model";
+import { User } from "../models/user.model";
+import { ITrigger } from '../models/trigger.interface';
+import { GenericRecord } from "../models/genericrecord.model";
+import { GenericEvent } from "../models/genericevent.model";
 
 export class ClockEvent extends GenericEvent {
     // As a start, use genericevent 
