@@ -26,7 +26,8 @@ export interface IEventTrigger extends ITrigger {
     generateRecord(user: User, curTime: Date, shouldRunRecord:GenericRecord, probabilityRecord?:GenericRecord, actionRecord?:GenericRecord):TriggerRecord;
     */
 
-    isCorrectEventName(event:GenericEvent): boolean;
+    // no need, done at the loop level
+    //isCorrectEventName(event:GenericEvent): boolean;
 
     // public? but do not expect to be called in usual cases. Will be called 
     //generateRecord():TriggerRecord;

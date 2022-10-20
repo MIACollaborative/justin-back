@@ -32,6 +32,7 @@ export default class FixedTimeTrigger implements IEventTrigger {
         return this.eventName;
     }
 
+    /*
     isCorrectEventName(event:GenericEvent): boolean{
         let result = false;
 
@@ -42,6 +43,7 @@ export default class FixedTimeTrigger implements IEventTrigger {
 
         return result;
     }
+    */
 
     async shouldDecide(user: User, event:GenericEvent): Promise<GenericRecord> {
         let curTime = event.providedTimestamp;

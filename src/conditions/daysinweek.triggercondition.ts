@@ -5,10 +5,12 @@ import GeneralUtility from '../utilities/generalutilities';
 import { DateTime } from 'luxon';
 import { GenericCondition } from '../models/genericcondition.model';
 import { GenericEvent } from '../models/genericevent.model';
+import { GenericEventCondition } from '../models/genericeventcondition.model';
 
-export default class DaysInAWeekTriggerCondition extends GenericCondition {
+export default class DaysInAWeekTriggerCondition extends GenericEventCondition {
 
     name: string = "DaysInAWeekTriggerCondition";
+    eventName: string = "clock";
 
     #daysInWeekIndexList: number[];
 
@@ -26,17 +28,16 @@ export default class DaysInAWeekTriggerCondition extends GenericCondition {
         let result = false;
         let weekIndex = -1;
 
-        if(user != null){
-            // assuming this is the user timezone
-            // next step: retrieving it from the user state?
-            let userTimezoneString = "America/New_York";
-            let localTimeForUser = GeneralUtility.getLocalTime(curTime, userTimezoneString);
+        // version 2: use user state "timezone"
+        let targetTime;
+        if (user && user.getState() != undefined) {
+            let userState = user.getState() as Object;
+            let gmtOffset = userState["timezone"]["gmtOffsetInMinutes"]; // (userState["timezone"] as TimeZoneState).getGMTOffsetInMinutes();
 
-            weekIndex = localTimeForUser.weekday;
+            targetTime = GeneralUtility.getLocalTimeWithOffset(curTime, gmtOffset);
+            weekIndex = targetTime.weekday;
         }
-        else {
-            weekIndex = DateTime.fromJSDate(curTime).weekday;
-        }
+        
 
         console.log(`[Condition]`, this.getName(), `weekIndex`, weekIndex);
         

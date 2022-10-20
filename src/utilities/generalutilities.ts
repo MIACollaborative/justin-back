@@ -8,6 +8,11 @@ export default class GeneralUtility {
         return DateTime.fromJSDate(date).setZone(timezone);
     }
 
+    static getLocalTimeWithOffset(date: Date, offset: number) {
+        let zoneName = DateTime.now().toUTC(offset).zoneName;
+        return DateTime.fromJSDate(date).setZone(zoneName);
+    }
+
     static timezoneNameToOffset(zoneName: string): number{
         return DateTime.now().setZone(zoneName).offset;
     }

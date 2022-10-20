@@ -11,11 +11,13 @@ import DaysInAWeekTriggerCondition from '../conditions/daysinweek.triggerconditi
 import { GenericCondition } from '../models/genericcondition.model';
 import { AllConditionArbiter } from '../arbiters/allcondition.arbiter';
 import { GenericEvent } from '../models/genericevent.model';
+import { IEventTrigger } from '../models/eventtrigger.interface';
 
-export default class DaysInWeekTrigger implements ITrigger {
+export default class DaysInWeekTrigger implements IEventTrigger {
 
     name: string = "DaysInWeekTrigger";
-    type: string = "standard";
+    type: string = "event";
+    eventName: string = "clock";
     
     // private members
     #shouldDecideRecord: GenericRecord;
@@ -27,9 +29,9 @@ export default class DaysInWeekTrigger implements ITrigger {
         return this.name;
     }
 
-    
-
-
+    getEventName(): string{
+        return this.eventName;
+    }
 
     async shouldDecide(user: User, event:GenericEvent): Promise<GenericRecord> {
         let curTime = event.providedTimestamp;

@@ -34,16 +34,11 @@ export default class FixedTimeTriggerCondition extends GenericEventCondition {
 
         let curTime = event.providedTimestamp;
 
-        
-        if( event.name != this.eventName){
-            return this.generateRecord({ value: false }, curTime);
-        }
-
         // assuming this is the user timezone
         // next step: retrieving it from the user state?
 
         
-        let userTimezoneString = "America/New_York";
+        //let userTimezoneString = "America/New_York";
 
         // version 2: use user state "timezone"
         
