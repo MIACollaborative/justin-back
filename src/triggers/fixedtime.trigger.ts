@@ -10,11 +10,13 @@ import DesktopNotificationAction from '../actions/desktopnotification.action';
 import { GenericCondition } from '../models/genericcondition.model';
 import { AllConditionArbiter } from '../arbiters/allcondition.arbiter';
 import { GenericEvent } from '../models/genericevent.model';
+import { IEventTrigger } from '../models/eventtrigger.interface';
 
-export default class FixedTimeTrigger implements ITrigger {
+export default class FixedTimeTrigger implements IEventTrigger {
 
     name: string = "FixedTimeTrigger";
-    type: string = "standard";
+    type: string = "event";
+    eventName: string = "clock";
     
     // private members
     #shouldDecideRecord: GenericRecord;
@@ -26,16 +28,31 @@ export default class FixedTimeTrigger implements ITrigger {
         return this.name;
     }
 
+    getEventName(): string {
+        return this.eventName;
+    }
 
+    /*
+    isCorrectEventName(event:GenericEvent): boolean{
+        let result = false;
 
+        if( event.name !== this.getName()){
+            // now the right event to deal with
+            result = true;
+        }
+
+        return result;
+    }
+    */
 
     async shouldDecide(user: User, event:GenericEvent): Promise<GenericRecord> {
+        console.log('[Trigger] ', this.getName(), '.shouldDecide()', user.getName()); 
         let curTime = event.providedTimestamp;
 
         // version 4: use arbiter directly
         let conditionList:GenericCondition[] = [];
 
-        let tCondition = FixedTimeTriggerCondition.fromSpec({targetTimeString: "05:00 PM", forValidity: true});
+        let tCondition = FixedTimeTriggerCondition.fromSpec({targetTimeString: "11:55 PM", forValidity: true});
 
         conditionList.push(tCondition);
         

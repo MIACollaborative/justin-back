@@ -8,6 +8,7 @@ import { addDecisionRecord } from './db/decisionrecords.service';
 import { addTriggerRecord } from './db/triggerrecords.service';
 import { GenericRecord } from './models/genericrecord.model';
 import { GenericEvent } from './models/genericevent.model';
+import { IEventTrigger } from './models/eventtrigger.interface';
 
 dotenv.config();
 
@@ -121,20 +122,29 @@ export async function doEvent(curTime: Date, event:GenericEvent) {
     console.log(`doEvent: ${JSON.stringify(event, null, 2)}, ${curTime}`);
     let users = await userService.getAllUsers();
 
-    let triggers = await (await configService.getTriggers()).filter((trigger) => {
+    //let triggers = await configService.getTriggers();
+    
+    // no need if all triggers are event-basedd
+    
+    let triggers = (await (await configService.getTriggers()).filter((trigger) => {
         return trigger["type"] != undefined && trigger.type == "event";
+    }) as IEventTrigger[]).filter((eventTrigger) => {
+        // step 0: check event type
+        return eventTrigger.getEventName() == event.name;
     });
     
-    console.log(`triggers: ${triggers}`);
+    
+    console.log(`Event triggers for [${event.name}]: ${triggers}`);
     console.log('doing tick at', curTime);
 
-    for (let u of users) {
-        u = u as User;
-        for (let t of triggers) {
+    for (let user of users) {
+        user = user as User;
+        for (let trigger of triggers) {
+            
             // version 3: roll back to version 1
-            let shouldRunRecord = await t.shouldDecide(u, event);
+            let shouldRunRecord = await trigger.shouldDecide(user, event);
 
-            console.log('[Trigger] ', t, '.shouldRun()', shouldRunRecord);
+            console.log('[Trigger] ', trigger, '.shouldRun()', shouldRunRecord);
 
             if (!shouldRunRecord["record"]["validity"]){
                 // not valid, we don't even need a record
@@ -142,16 +152,16 @@ export async function doEvent(curTime: Date, event:GenericEvent) {
             }
             else if (!shouldRunRecord["record"]["value"]){
                 // should not run, but want to leave a record
-                let tempRecord = t.generateRecord(u, curTime, shouldRunRecord);
+                let tempRecord = trigger.generateRecord(user, curTime, shouldRunRecord);
                 addTriggerRecord(tempRecord);
-                console.log('ran trigger', t, 'for user', u.getName(), '-> should not run: ', tempRecord);
+                console.log('ran trigger', trigger, 'for user', user.getName(), '-> should not run: ', tempRecord);
                 continue;
             }
 
             let diceRoll = Math.random();
             console.log('dice role:', diceRoll);
 
-            let probabilityGot = await t.decide(u, event);
+            let probabilityGot = await trigger.decide(user, event);
 
             console.log('probabilityGot:', JSON.stringify(probabilityGot, null, 2));
 
@@ -162,17 +172,17 @@ export async function doEvent(curTime: Date, event:GenericEvent) {
             let actionRecord;
 
             if (diceRoll < probability) {
-                actionRecord = await t.doAction(u, event);
+                actionRecord = await trigger.doAction(user, event);
             } else {
-                actionRecord = new NoActionDecisionRecord(u, t.getName(), curTime);
+                actionRecord = new NoActionDecisionRecord(user, trigger.getName(), curTime);
                 console.log('no action, record:', actionRecord);
             }
 
             // run and store a record
-            let triggerRecord =  t.generateRecord(u, curTime, shouldRunRecord, probabilityRecord, actionRecord);
+            let triggerRecord =  trigger.generateRecord(user, curTime, shouldRunRecord, probabilityRecord, actionRecord);
             addTriggerRecord(triggerRecord);
 
-            console.log('ran trigger', t, 'for user', u.getName(), ':', triggerRecord);
+            console.log('ran trigger', trigger, 'for user', user.getName(), ':', triggerRecord);
 
 
 

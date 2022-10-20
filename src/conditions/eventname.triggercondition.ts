@@ -3,11 +3,13 @@ import { User } from '../models/user.model';
 import { GenericRecord } from '../models/genericrecord.model';
 import { GenericCondition } from '../models/genericcondition.model';
 import { GenericEvent } from '../models/genericevent.model';
+import { GenericEventCondition } from '../models/genericeventcondition.model';
 
-export default class EventNameTriggerCondition extends GenericCondition {
+export default class EventNameTriggerCondition extends GenericEventCondition {
 
     name: string = "EventNameTriggerCondition";
     type: string = "event"; // standard, event
+    
     
     #eventName: string = "";
 
