@@ -6,8 +6,9 @@ import { GenericEventSubscriber } from "../models/genericeventsubscriber.model";
 import { GenericEvent } from "../models/genericevent.model";
 import nodeCron from "node-cron";
 import { DateTime } from "luxon";
-import { ClockEvent } from "../models/clockevent.model";
+import { ClockEvent } from "../events/clockevent.model";
 import { addEvent, archiveEvent} from '../db/events.service';
+import { UserResponseEvent } from "../events/userresponseevent.model";
 
 
 dotenv.config();
@@ -28,7 +29,7 @@ let theExpression = expressionLabelDict["10 seconds"];
 
 nodeCron.schedule(theExpression.expression, async () => {
     let cronTime = process.hrtime();
-    console.log(`execute cron clock event generation task ${theExpression.label} at ${cronTime}`);
+    console.log(`execute cron event generation task ${theExpression.label} at ${cronTime}`);
     let t1 = process.hrtime();
 
     // for testing: 2022-09-19 08:00 PM
@@ -36,14 +37,15 @@ nodeCron.schedule(theExpression.expression, async () => {
     
     // for real
     //let now = DateTime.now().toJSDate();
-    let cEvent = new ClockEvent("clock", "system-user", now);
+    //let cEvent = new ClockEvent("clock", "system-user", now);
+    let cEvent = new UserResponseEvent("user-response", "participant1", now, "survey", "testSurveyId", "testReponseId");
 
-    console.log(`Clock event: ${JSON.stringify(cEvent)}`);
+    console.log(`Event: ${JSON.stringify(cEvent)}`);
 
     addEvent(cEvent);
 
     let t2 = process.hrtime();
-    console.log('Generate clock event in', (t2[1] - t1[1]) / 1000000, 'ms');
+    console.log('Generate an event in', (t2[1] - t1[1]) / 1000000, 'ms');
 });
 
 async function doTests() {

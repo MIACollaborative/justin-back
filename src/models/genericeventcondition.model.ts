@@ -7,7 +7,7 @@ import { GenericCondition } from "./genericcondition.model";
 
 export class GenericEventCondition extends GenericCondition {
     forValidity: boolean = false;
-    type: string = "standard";
+    type: string = "event";
     eventName: string = "clock";
     
     generateRecord( recordObj:Object, curTime: Date):GenericRecord{

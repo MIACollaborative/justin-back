@@ -4,6 +4,7 @@ import { GenericRecord } from "./genericrecord.model";
 
 import { GenericEvaluable } from "./genericevaluable.model";
 import { GenericEvent } from "./genericevent.model";
+import { GenericCondition } from "./genericcondition.model";
 
 export class GenericArbiter extends GenericEvaluable {
 
@@ -16,7 +17,7 @@ export class GenericArbiter extends GenericEvaluable {
         // To Do: need to handle validity?
         return new GenericRecord(recordObj, curTime);
     }
-
+    
     // the idea of generating an evaluable (that is callable) .... not implemented yet
     static compose(user:User, event:GenericEvent, metaObject:{evaluableList: GenericEvaluable[]}): GenericArbiter{
         return new GenericArbiter();
