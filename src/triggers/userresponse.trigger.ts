@@ -66,7 +66,9 @@ export default class UserResponseTrigger implements IEventTrigger {
         arbiterC.setMetaObject({evaluableList: [arbiterA, arbiterB]});
 
 
-        this.#shouldDecideRecord = await new AllConditionArbiter().evaluate(user, event, {evaluableList: conditionList});
+        // this.#shouldDecideRecord = await new AllConditionArbiter().evaluate(user, event, {evaluableList: conditionList});
+
+        this.#shouldDecideRecord = await arbiterC.evaluate(user, event);
         
         return this.#shouldDecideRecord;
     }
@@ -94,7 +96,7 @@ export default class UserResponseTrigger implements IEventTrigger {
         //let actionResult = await createDesktopNotification(`[${this.getName()}]`, message);
         
 
-        let actionResultRecord = await aAction.evaluate(user, curTime);
+        let actionResultRecord = await aAction.evaluate(user, event);
 
         writeLogMessage(message).then(() => {
             // not sure what to do here.

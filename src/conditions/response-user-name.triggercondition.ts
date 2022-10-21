@@ -32,6 +32,7 @@ export default class ResponseUserNameTriggerCondition extends GenericEventCondit
         
 
         result = theEvent.userName == this.#responseUserName;
+        console.log(`${this.name}.evaluate: ${result}`);
 
         return this.generateRecord({value: result, responseUserName: this.#responseUserName}, curTime);
     }

@@ -11,7 +11,7 @@ export class SomeConditionArbiter extends GenericConditionArbiter {
 
     #metaObject:{evaluableList: GenericCondition[]};
 
-    async evaluate(user:User, event:GenericEvent, metaObject:{evaluableList: GenericCondition[]}):Promise<GenericRecord>{
+    async evaluate(user:User, event:GenericEvent, metaObject?:{evaluableList: GenericCondition[]}):Promise<GenericRecord>{
 
         let eList = metaObject != undefined? metaObject.evaluableList: this.#metaObject.evaluableList;
 

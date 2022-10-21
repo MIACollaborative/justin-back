@@ -36,6 +36,8 @@ export default class ResponseTypeAndIdTriggerCondition extends GenericEventCondi
 
         result = theEvent.promptType == this.#promptType && theEvent.promptId == this.#promptId;
 
+        console.log(`${this.name}.evaluate: ${result}`);
+
         return this.generateRecord({value: result, promptType: this.#promptType, promptId: this.#promptId}, curTime);
     }
 
