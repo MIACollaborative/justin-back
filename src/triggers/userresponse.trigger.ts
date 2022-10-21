@@ -54,9 +54,6 @@ export default class UserResponseTrigger implements IEventTrigger {
         arbiterA.setMetaObject({evaluableList: conditionList});
 
 
-
-
-
         conditionList = [];
         tCondition = ResponseUserNameTriggerCondition.fromSpec({responseUserName: user.getUsername(), forValidity: true});
         conditionList.push(tCondition);
@@ -66,7 +63,7 @@ export default class UserResponseTrigger implements IEventTrigger {
 
 
         let arbiterC = new AllConditionArbiter();
-        arbiterC.setMetaObject({evaluableList: [arbiterA, arbiterB], forValidity: true});
+        arbiterC.setMetaObject({evaluableList: [arbiterA, arbiterB]});
 
 
         this.#shouldDecideRecord = await new AllConditionArbiter().evaluate(user, event, {evaluableList: conditionList});
