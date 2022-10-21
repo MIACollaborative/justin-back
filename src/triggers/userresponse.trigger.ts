@@ -15,6 +15,7 @@ import { GenericEvent } from '../models/genericevent.model';
 import { IEventTrigger } from '../models/eventtrigger.interface';
 import ResponseTypeAndIdTriggerCondition from '../conditions/responseidtype.triggercondition';
 import ResponseUserNameTriggerCondition from '../conditions/response-user-name.triggercondition';
+import { SomeConditionArbiter } from '../arbiters/somecondition.arbiter';
 
 export default class UserResponseTrigger implements IEventTrigger {
 
@@ -42,14 +43,31 @@ export default class UserResponseTrigger implements IEventTrigger {
         console.log('[Trigger] ', this.getName(), '.shouldDecide()', user.getName()); 
 
         // version 4: use arbiter directly
+
         let conditionList:GenericCondition[] = [];
 
-        let tCondition = ResponseTypeAndIdTriggerCondition.fromSpec({promptType: "survey", promptId: "testSurveyId", forValidity: true});
-
+        let tCondition = ResponseTypeAndIdTriggerCondition.fromSpec({promptType: "survey", promptId: "testSurveyId1", forValidity: true});
         conditionList.push(tCondition);
+        tCondition = ResponseTypeAndIdTriggerCondition.fromSpec({promptType: "survey", promptId: "testSurveyId2", forValidity: true});
+        conditionList.push(tCondition);
+        let arbiterA = new SomeConditionArbiter();
+        arbiterA.setMetaObject({evaluableList: conditionList});
 
+
+
+
+
+        conditionList = [];
         tCondition = ResponseUserNameTriggerCondition.fromSpec({responseUserName: user.getUsername(), forValidity: true});
         conditionList.push(tCondition);
+
+        let arbiterB = new AllConditionArbiter();
+        arbiterB.setMetaObject({evaluableList: conditionList});
+
+
+        let arbiterC = new AllConditionArbiter();
+        arbiterC.setMetaObject({evaluableList: [arbiterA, arbiterB], forValidity: true});
+
 
         this.#shouldDecideRecord = await new AllConditionArbiter().evaluate(user, event, {evaluableList: conditionList});
         

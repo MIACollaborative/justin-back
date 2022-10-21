@@ -7,9 +7,9 @@ import { GenericCondition } from "../models/genericcondition.model";
 import GeneralUtility from "../utilities/generalutilities";
 import { GenericEvent } from "../models/genericevent.model";
 
-export class AllConditionArbiter extends GenericArbiter {
+export class SomeConditionArbiter extends GenericArbiter {
 
-    name: string = "AllConditionArbiter";
+    name: string = "SomeConditionArbiter";
 
     #metaObject:{evaluableList: GenericCondition[]};
 
@@ -26,12 +26,16 @@ export class AllConditionArbiter extends GenericArbiter {
 
             // if we want to speed thing up by enforcing validity to be true
             console.log(`${this.name}.evaluate(${condition.getName()}): validity: ${resultRecord['record']['validity']}`);
+
+            // because it is or, we will go through all
+            /*
             if(!resultRecord['record']['validity']){
                 // stop as soon as we find one condition to be invalid
                 // (meaning, the triiger was not even worth of considering)
                 console.log(`${this.name}.evaluate: ${condition.getName()}.validity == false, skipping the rest of the conditions.`);
                 break;
             }
+            */
         }
 
         let result = true;
@@ -42,7 +46,7 @@ export class AllConditionArbiter extends GenericArbiter {
 
         console.log(`valueList: ${valueList}`);
 
-        result = GeneralUtility.reduceBooleanArray(valueList, "and");
+        result = GeneralUtility.reduceBooleanArray(valueList, "or");
 
         // validity: most likely use "and", but people can customize
         let validity = true;
@@ -53,7 +57,7 @@ export class AllConditionArbiter extends GenericArbiter {
 
         console.log(`validityList: ${validityList}`);
 
-        validity = GeneralUtility.reduceBooleanArray(validityList, "and");
+        validity = GeneralUtility.reduceBooleanArray(validityList, "or");
 
 
         return new GenericRecord({value: result, validity: validity,  recordList: conditionEvaluationResultList}, event.providedTimestamp);
@@ -62,6 +66,7 @@ export class AllConditionArbiter extends GenericArbiter {
     setMetaObject(metaObject:{evaluableList: GenericCondition[]}){
         this.#metaObject = metaObject;
     }
+
 
 
     /*
