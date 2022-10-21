@@ -17,14 +17,16 @@ export class UserResponseEvent extends GenericEvent {
     generatedTimestamp: Date;
     */
     
-    responseType: string;
+    promptType: string;
+    promptId: string;
     responseId: string;
 
 
     
-    constructor(name: string, userName: string, timestamp: Date, responseType: string, responseId: string) {
+    constructor(name: string, userName: string, timestamp: Date, promptType: string, promptId: string, responseId: string) {
         super(name, userName, timestamp);
-        this.responseType = responseType;
+        this.promptType = promptType;
+        this.promptId = promptId;
         this.responseId = responseId;
     }
 }

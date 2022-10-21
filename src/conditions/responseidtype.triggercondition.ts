@@ -13,35 +13,35 @@ export default class ResponseTypeAndIdTriggerCondition extends GenericEventCondi
     name: string = "ResponseTypeAndIdTriggerCondition";
     eventName: string = "user-response";
 
-    #responseType: string;
-    #responseId: string;
+    #promptType: string;
+    #promptId: string;
 
     constructor(responseType: string, responseId: string, forValidity: boolean = false) {
         super();
-        this.#responseType = responseType;
-        this.#responseId = responseId;
+        this.#promptType = responseType;
+        this.#promptId = responseId;
         this.forValidity = forValidity;
     }
 
     async evaluate(user: User | null, event:GenericEvent): Promise<GenericRecord> {
         let curTime = event.providedTimestamp;
-        console.log(`[Condition]`, this.getName(), `responseType`, this.#responseType , `responseId`, this.#responseId);
+        console.log(`[Condition]`, this.getName(), `responseType`, this.#promptType , `responseId`, this.#promptId);
 
         let result = false;
         let weekIndex = -1;
 
         let theEvent = event as UserResponseEvent;
-        console.log(`[Condition]`, this.getName(), `responseType`, theEvent.responseType, `responseId`, theEvent.responseId);
+        console.log(`[Condition]`, this.getName(), `promptType`, theEvent.promptType, `promptId`, theEvent.promptId);
         
 
-        result = theEvent.responseType == this.#responseType && theEvent.responseId == this.#responseId;
+        result = theEvent.promptType == this.#promptType && theEvent.promptId == this.#promptId;
 
-        return this.generateRecord({value: result, responseType: this.#responseType, responseId: this.#responseId}, curTime);
+        return this.generateRecord({value: result, promptType: this.#promptType, promptId: this.#promptId}, curTime);
     }
 
-    static fromSpec(spec: {responseType: string, responseId: string, forValidity: boolean}): GenericCondition {
+    static fromSpec(spec: {promptType: string, promptId: string, forValidity: boolean}): GenericCondition {
      
-     let newTCondition = new ResponseTypeAndIdTriggerCondition(spec["responseType"], spec["responseId"], spec["forValidity"]);
+     let newTCondition = new ResponseTypeAndIdTriggerCondition(spec["promptType"], spec["promptId"], spec["forValidity"]);
      
      return newTCondition;
 
