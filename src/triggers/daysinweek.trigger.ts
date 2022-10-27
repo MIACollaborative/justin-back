@@ -17,7 +17,7 @@ export default class DaysInWeekTrigger implements IEventTrigger {
 
     name: string = "DaysInWeekTrigger";
     type: string = "event";
-    eventName: string = "clock";
+    eventName: string = "clock"; // clock vs. user-response
     
     // private members
     #shouldDecideRecord: GenericRecord;

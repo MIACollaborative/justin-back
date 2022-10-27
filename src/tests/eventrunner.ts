@@ -32,7 +32,7 @@ nodeCron.schedule(theExpression.expression, async () => {
     console.log(`execute cron event generation task ${theExpression.label} at ${cronTime}`);
     let t1 = process.hrtime();
 
-    // for testing: 2022-09-19 08:00 PM
+    // for testing: 2022-09-19 08:00 PM 000 milliseconds
     let now = new Date(2022, 8, 19, 2, 55, 0); //EDT/EST
     
     // for real
