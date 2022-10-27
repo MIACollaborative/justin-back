@@ -10,7 +10,8 @@ export class GenericCondition extends GenericEvaluable {
 
     generateRecord( recordObj:Object, curTime: Date):GenericRecord{
         let basis = {name: this.name, resultType: this.resultType, validity: this.forValidity? recordObj["value"]: true};
-        return new GenericRecord({...basis, ...recordObj}, curTime);
+        return super.generateRecord({...basis, ...recordObj}, curTime);
+        //return new GenericRecord({...basis, ...recordObj}, curTime);
     }
 
 }
