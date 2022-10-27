@@ -38,7 +38,7 @@ export default class ResponseTypeAndIdTriggerCondition extends GenericEventCondi
 
         console.log(`${this.name}.evaluate: ${result}`);
 
-        return this.generateRecord({value: result, promptType: this.#promptType, promptId: this.#promptId}, curTime);
+        return this.generateRecord({value: result, conditionName: this.name, promptType: this.#promptType, promptId: this.#promptId}, curTime);
     }
 
     static fromSpec(spec: {promptType: string, promptId: string, forValidity: boolean}): GenericCondition {

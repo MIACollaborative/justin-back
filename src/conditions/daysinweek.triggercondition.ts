@@ -44,7 +44,7 @@ export default class DaysInAWeekTriggerCondition extends GenericEventCondition {
 
         result =  this.#daysInWeekIndexList.includes(weekIndex);
 
-        return this.generateRecord({value: result, daysInWeekIndexList: this.#daysInWeekIndexList}, curTime);
+        return this.generateRecord({value: result, conditionName: this.name, daysInWeekIndexList: this.#daysInWeekIndexList}, curTime);
     }
 
     static fromSpec(spec: {daysInWeekIndexList: number[], forValidity: boolean}): GenericCondition {
