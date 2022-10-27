@@ -22,8 +22,18 @@ export class SomeConditionArbiter extends GenericConditionArbiter {
             let resultRecord:GenericRecord = await condition.evaluate(user, event);
             conditionEvaluationResultList.push(resultRecord);
 
+            console.log(`${this.name}.evaluate(${condition.getName()}): record: ${JSON.stringify(resultRecord, null, 2)}`);
+
             // if we want to speed thing up by enforcing validity to be true
             console.log(`${this.name}.evaluate(${condition.getName()}): validity: ${resultRecord['record']['validity']}`);
+
+            // it shoudl jsut be about value, since it is an "and" operation
+            if(resultRecord['record']['value']){
+                // stop as soon as we find one condition to be invalid
+                // (meaning, the triiger was not even worth of considering)
+                console.log(`${this.name}.evaluate: ${condition.getName()}.value == true, skipping the rest of the conditions.`);
+                break;
+            }
 
             // because it is or, we will go through all
             /*
@@ -42,7 +52,7 @@ export class SomeConditionArbiter extends GenericConditionArbiter {
             return record['record']['value'];
         });
 
-        console.log(`valueList: ${valueList}`);
+        console.log(`${this.name}: valueList: ${valueList}`);
 
         result = GeneralUtility.reduceBooleanArray(valueList, "or");
 
@@ -53,7 +63,7 @@ export class SomeConditionArbiter extends GenericConditionArbiter {
             return record['record']['validity'];
         });
 
-        console.log(`validityList: ${validityList}`);
+        console.log(`${this.name}: validityList: ${validityList}`);
 
         validity = GeneralUtility.reduceBooleanArray(validityList, "or");
 

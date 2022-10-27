@@ -78,7 +78,7 @@ export async function doEvent(curTime: Date, event:GenericEvent) {
             let triggerRecord =  trigger.generateRecord(user, curTime, shouldRunRecord, probabilityRecord, actionRecord);
             addTriggerRecord(triggerRecord);
 
-            console.log('ran trigger', trigger, 'for user', user.getName(), ':', triggerRecord);
+            console.log('ran trigger', trigger, 'for user', user.getName(), ':', JSON.stringify(triggerRecord, null, 2));
 
 
 

@@ -23,12 +23,12 @@ export default class ResponseUserNameTriggerCondition extends GenericEventCondit
 
     async evaluate(user: User | null, event:GenericEvent): Promise<GenericRecord> {
         let curTime = event.providedTimestamp;
-        console.log(`[Condition]`, this.getName(), `responseUserName`, this.#responseUserName);
+        console.log(`[Condition] Spec`, this.getName(), `responseUserName`, this.#responseUserName);
 
         let result = false;
 
         let theEvent = event as UserResponseEvent;
-        console.log(`[Condition]`, this.getName(), `userName`, theEvent.userName, `promptType`, theEvent.promptType, `promptId`, theEvent.promptId);
+        console.log(`[Condition] Event`, this.getName(), `userName`, theEvent.userName, `promptType`, theEvent.promptType, `promptId`, theEvent.promptId);
         
 
         result = theEvent.userName == this.#responseUserName;

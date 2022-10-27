@@ -14,7 +14,8 @@ export class TriggerRecord extends GenericRecord {
     constructor(user: User, triggerId: string, record: Object, timestamp: Date) {
         super(record, timestamp);
 
-        this.user = user;
+        // use getInfoForRecord to avoid sensitve information
+        this.user = user.getInfoForRecord();
         this.triggerId = triggerId;
         /*
         this.record = record;

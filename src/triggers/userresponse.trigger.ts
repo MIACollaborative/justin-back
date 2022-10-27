@@ -53,21 +53,23 @@ export default class UserResponseTrigger implements IEventTrigger {
         let arbiterA = new SomeConditionArbiter();
         arbiterA.setMetaObject({evaluableList: conditionList});
 
+        //this.#shouldDecideRecord = await arbiterA.evaluate(user, event);
 
+        // version 2: try the condition directly?
+        
+        // version 1: use Arbiter
         conditionList = [];
         tCondition = ResponseUserNameTriggerCondition.fromSpec({responseUserName: user.getUsername(), forValidity: true});
         conditionList.push(tCondition);
 
-        let arbiterB = new AllConditionArbiter();
-        arbiterB.setMetaObject({evaluableList: conditionList});
+        //let arbiterB = new AllConditionArbiter();
+        //arbiterB.setMetaObject({evaluableList: conditionList});
 
 
         let arbiterC = new AllConditionArbiter();
-        arbiterC.setMetaObject({evaluableList: [arbiterA, arbiterB]});
-
-
-        // this.#shouldDecideRecord = await new AllConditionArbiter().evaluate(user, event, {evaluableList: conditionList});
-
+        //arbiterC.setMetaObject({evaluableList: [arbiterA, arbiterB]});
+        arbiterC.setMetaObject({evaluableList: [arbiterA, tCondition]});
+        
         this.#shouldDecideRecord = await arbiterC.evaluate(user, event);
         
         return this.#shouldDecideRecord;

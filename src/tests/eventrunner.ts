@@ -43,14 +43,14 @@ nodeCron.schedule(theExpression.expression, async () => {
 
     console.log(`Event: ${JSON.stringify(cEvent)}`);
 
-    //await addEvent(cEvent);
+    await addEvent(cEvent);
 
     
     cEvent = new UserResponseEvent("user-response", "participant2", now, "survey", "testSurveyId3", "testReponseId2");
 
     console.log(`Event: ${JSON.stringify(cEvent)}`);
 
-    await addEvent(cEvent);
+    //await addEvent(cEvent);
     
 
     let t2 = process.hrtime();
