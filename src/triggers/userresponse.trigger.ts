@@ -58,10 +58,11 @@ export default class UserResponseTrigger implements IEventTrigger {
         // version 2: try the condition directly?
         
         // version 1: use Arbiter
+        /*
         conditionList = [];
         tCondition = ResponseUserNameTriggerCondition.fromSpec({responseUserName: user.getUsername(), forValidity: true});
         conditionList.push(tCondition);
-
+        */
         //let arbiterB = new AllConditionArbiter();
         //arbiterB.setMetaObject({evaluableList: conditionList});
 
