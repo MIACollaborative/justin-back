@@ -1,9 +1,9 @@
 import notifier from "node-notifier";
-import { IAction } from "../models/action.interface";
 import { GenericAction } from "../models/genericaction.model";
 import { GenericRecord } from "../models/genericrecord.model";
 import { User } from "../models/user.model";
 import { Expo } from 'expo-server-sdk';
+import { GenericEvent } from "../models/genericevent.model";
 
 
 //let expo = new Expo();
@@ -18,6 +18,7 @@ export default class ExpoPushNotificationAction extends GenericAction {
   #expo:Expo = new Expo();
 
   #message:string;
+  #title: string;
 
   constructor(metaObj: {title:string, message:string}) {
     super();
@@ -25,7 +26,8 @@ export default class ExpoPushNotificationAction extends GenericAction {
     this.#message = metaObj["message"];
   }
   
-  async evaluate(user: User, curTime: Date): Promise<GenericRecord> {
+  async evaluate(user: User, event: GenericEvent): Promise<GenericRecord> {
+    let curTime = event.providedTimestamp;
       console.log(`[Action]`, this.getName(), `curTime`, curTime);
 
       let result = await notifier.notify(

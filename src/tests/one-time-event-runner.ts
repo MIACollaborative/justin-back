@@ -13,49 +13,34 @@ import { UserResponseEvent } from "../events/userresponseevent.model";
 
 dotenv.config();
 
-let expressionLabelDict = {
-    "1 minute": {
-        label: 'every 1 minute',
-        expression: '* * * * *'
-    },
-    "10 seconds": {
-        label: 'every 10 seconds',
-        expression: '*/10 * * * * *'
-    }
 
-};
-
-let theExpression = expressionLabelDict["10 seconds"];
-
-nodeCron.schedule(theExpression.expression, async () => {
+async function execute(){
     let cronTime = process.hrtime();
-    console.log(`execute cron event generation task ${theExpression.label} at ${cronTime}`);
+    console.log(`execute cron event generation task at ${cronTime}`);
     let t1 = process.hrtime();
 
     // for testing: 2022-09-19 08:00 PM
     let now = new Date(2022, 8, 19, 2, 55, 0); //EDT/EST
-    
-    // for real
-    //let now = DateTime.now().toJSDate();
-    //let cEvent = new ClockEvent("clock", "system-user", now);
-    
+
     let cEvent = new UserResponseEvent("user-response", "participant1", now, "survey", "testSurveyId1", "testReponseId1");
 
     console.log(`Event: ${JSON.stringify(cEvent)}`);
 
     await addEvent(cEvent);
 
-    
-    cEvent = new UserResponseEvent("user-response", "participant2", now, "survey", "testSurveyId3", "testReponseId2");
+    cEvent = new UserResponseEvent("user-response", "participant2", now, "survey", "testSurveyId2", "testReponseId2");
 
     console.log(`Event: ${JSON.stringify(cEvent)}`);
 
-    //await addEvent(cEvent);
+    await addEvent(cEvent);
+
     
 
     let t2 = process.hrtime();
     console.log('Generate an event in', (t2[1] - t1[1]) / 1000000, 'ms');
-});
+
+}
+
 
 async function doTests() {
     console.log('running tests through event');
@@ -94,10 +79,13 @@ async function doTests() {
 
     async function mySubscribe(){
         eventSubscriber.addListener(myEventHandler);
-        return await eventSubscriber.subscribe();
+        return eventSubscriber.subscribe();
     }
 
-    mySubscribe();
+    mySubscribe().then(async (response) => {
+        return await execute();
+    })
+    
 
 }
 

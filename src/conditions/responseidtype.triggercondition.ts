@@ -25,16 +25,18 @@ export default class ResponseTypeAndIdTriggerCondition extends GenericEventCondi
 
     async evaluate(user: User | null, event:GenericEvent): Promise<GenericRecord> {
         let curTime = event.providedTimestamp;
-        console.log(`[Condition]`, this.getName(), `responseType`, this.#promptType , `responseId`, this.#promptId);
+        console.log(`[Condition] Spec`, this.getName(), `promptType`, this.#promptType , `promptId`, this.#promptId);
 
         let result = false;
         let weekIndex = -1;
 
         let theEvent = event as UserResponseEvent;
-        console.log(`[Condition]`, this.getName(), `promptType`, theEvent.promptType, `promptId`, theEvent.promptId);
+        console.log(`[Condition] Event`, this.getName(), `promptType`, theEvent.promptType, `promptId`, theEvent.promptId);
         
 
         result = theEvent.promptType == this.#promptType && theEvent.promptId == this.#promptId;
+
+        console.log(`${this.name}.evaluate: ${result}`);
 
         return this.generateRecord({value: result, promptType: this.#promptType, promptId: this.#promptId}, curTime);
     }

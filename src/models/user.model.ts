@@ -48,6 +48,12 @@ export class User {
 
     }
 
+    public getInfoForRecord(){
+        let copy = JSON.parse(JSON.stringify(this));
+        delete copy["token"];
+        return copy;
+    }
+
     public getUsername() {
         return this.username;
     }

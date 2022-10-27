@@ -53,23 +53,24 @@ export default class UserResponseTrigger implements IEventTrigger {
         let arbiterA = new SomeConditionArbiter();
         arbiterA.setMetaObject({evaluableList: conditionList});
 
+        //this.#shouldDecideRecord = await arbiterA.evaluate(user, event);
 
-
-
-
+        // version 2: try the condition directly?
+        
+        // version 1: use Arbiter
         conditionList = [];
         tCondition = ResponseUserNameTriggerCondition.fromSpec({responseUserName: user.getUsername(), forValidity: true});
         conditionList.push(tCondition);
 
-        let arbiterB = new AllConditionArbiter();
-        arbiterB.setMetaObject({evaluableList: conditionList});
+        //let arbiterB = new AllConditionArbiter();
+        //arbiterB.setMetaObject({evaluableList: conditionList});
 
 
         let arbiterC = new AllConditionArbiter();
-        arbiterC.setMetaObject({evaluableList: [arbiterA, arbiterB], forValidity: true});
-
-
-        this.#shouldDecideRecord = await new AllConditionArbiter().evaluate(user, event, {evaluableList: conditionList});
+        //arbiterC.setMetaObject({evaluableList: [arbiterA, arbiterB]});
+        arbiterC.setMetaObject({evaluableList: [arbiterA, tCondition]});
+        
+        this.#shouldDecideRecord = await arbiterC.evaluate(user, event);
         
         return this.#shouldDecideRecord;
     }
@@ -97,7 +98,7 @@ export default class UserResponseTrigger implements IEventTrigger {
         //let actionResult = await createDesktopNotification(`[${this.getName()}]`, message);
         
 
-        let actionResultRecord = await aAction.evaluate(user, curTime);
+        let actionResultRecord = await aAction.evaluate(user, event);
 
         writeLogMessage(message).then(() => {
             // not sure what to do here.

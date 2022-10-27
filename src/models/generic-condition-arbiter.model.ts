@@ -1,14 +1,14 @@
 import { User } from "./user.model";
 import { ITrigger } from './trigger.interface';
 import { GenericRecord } from "./genericrecord.model";
-
-import { GenericEvaluable } from "./genericevaluable.model";
 import { GenericEvent } from "./genericevent.model";
 import { GenericCondition } from "./genericcondition.model";
+import { GenericArbiter } from "./genericarbiter.model";
 
-export class GenericArbiter extends GenericEvaluable {
+export class GenericConditionArbiter extends GenericCondition {
+    resultType: string = "composite";
 
-    async evaluate(user:User, event:GenericEvent, metaObject:{evaluableList: GenericEvaluable[]}):Promise<GenericRecord>{
+    async evaluate(user:User, event:GenericEvent, metaObject:{evaluableList: GenericCondition[]}):Promise<GenericRecord>{
         // origianl generic version
         return Promise.resolve(this.generateRecord({}, event.providedTimestamp));
     }
@@ -21,8 +21,8 @@ export class GenericArbiter extends GenericEvaluable {
     */
     
     // the idea of generating an evaluable (that is callable) .... not implemented yet
-    static compose(user:User, event:GenericEvent, metaObject:{evaluableList: GenericEvaluable[]}): GenericArbiter{
-        return new GenericArbiter();
+    static compose(user:User, event:GenericEvent, metaObject:{evaluableList: GenericCondition[]}): GenericConditionArbiter{
+        return new GenericConditionArbiter();
     }
 
 }

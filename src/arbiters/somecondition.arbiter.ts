@@ -1,19 +1,17 @@
 import { User } from "../models/user.model";
-import { ITrigger } from '../models/trigger.interface';
 import { GenericRecord } from "../models/genericrecord.model";
-import { GenericEvaluable } from "../models/genericevaluable.model";
-import { GenericArbiter } from "../models/genericarbiter.model";
 import { GenericCondition } from "../models/genericcondition.model";
 import GeneralUtility from "../utilities/generalutilities";
 import { GenericEvent } from "../models/genericevent.model";
+import { GenericConditionArbiter } from "../models/generic-condition-arbiter.model";
 
-export class SomeConditionArbiter extends GenericArbiter {
+export class SomeConditionArbiter extends GenericConditionArbiter {
 
     name: string = "SomeConditionArbiter";
 
     #metaObject:{evaluableList: GenericCondition[]};
 
-    async evaluate(user:User, event:GenericEvent, metaObject:{evaluableList: GenericCondition[]}):Promise<GenericRecord>{
+    async evaluate(user:User, event:GenericEvent, metaObject?:{evaluableList: GenericCondition[]}):Promise<GenericRecord>{
 
         let eList = metaObject != undefined? metaObject.evaluableList: this.#metaObject.evaluableList;
 
@@ -24,8 +22,18 @@ export class SomeConditionArbiter extends GenericArbiter {
             let resultRecord:GenericRecord = await condition.evaluate(user, event);
             conditionEvaluationResultList.push(resultRecord);
 
+            console.log(`${this.name}.evaluate(${condition.getName()}): record: ${JSON.stringify(resultRecord, null, 2)}`);
+
             // if we want to speed thing up by enforcing validity to be true
             console.log(`${this.name}.evaluate(${condition.getName()}): validity: ${resultRecord['record']['validity']}`);
+
+            // it shoudl jsut be about value, since it is an "and" operation
+            if(resultRecord['record']['value']){
+                // stop as soon as we find one condition to be invalid
+                // (meaning, the triiger was not even worth of considering)
+                console.log(`${this.name}.evaluate: ${condition.getName()}.value == true, skipping the rest of the conditions.`);
+                break;
+            }
 
             // because it is or, we will go through all
             /*
@@ -44,7 +52,7 @@ export class SomeConditionArbiter extends GenericArbiter {
             return record['record']['value'];
         });
 
-        console.log(`valueList: ${valueList}`);
+        console.log(`${this.name}: valueList: ${valueList}`);
 
         result = GeneralUtility.reduceBooleanArray(valueList, "or");
 
@@ -55,12 +63,13 @@ export class SomeConditionArbiter extends GenericArbiter {
             return record['record']['validity'];
         });
 
-        console.log(`validityList: ${validityList}`);
+        console.log(`${this.name}: validityList: ${validityList}`);
 
         validity = GeneralUtility.reduceBooleanArray(validityList, "or");
 
+        return this.generateRecord({value: result, validity: validity,  recordList: conditionEvaluationResultList}, event.providedTimestamp);
 
-        return new GenericRecord({value: result, validity: validity,  recordList: conditionEvaluationResultList}, event.providedTimestamp);
+        //return new GenericRecord({value: result, validity: validity,  recordList: conditionEvaluationResultList}, event.providedTimestamp);
     }
 
     setMetaObject(metaObject:{evaluableList: GenericCondition[]}){

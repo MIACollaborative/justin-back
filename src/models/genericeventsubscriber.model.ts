@@ -20,7 +20,7 @@ export class GenericEventSubscriber {
     }
 
     async subscribe():Promise<Object>{
-        
+        console.log(`${this.name}.subscribe`);
         const collection = await getEventCollection();
         
         const changeStream = collection.watch(this.#filterList);
@@ -32,11 +32,12 @@ export class GenericEventSubscriber {
                 oneListener(nextDoc);
             });
         });
-
+        console.log(`${this.name}.subscribe before return`);
         return Promise.resolve(true);
     }
 
     addListener(listener: Function): void{
+        console.log(`${this.name}.addListener`);
         this.#listenerList.push(listener);
     }
 
