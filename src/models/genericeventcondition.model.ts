@@ -10,8 +10,10 @@ export class GenericEventCondition extends GenericCondition {
     type: string = "event";
     eventName: string = "clock";
     
+    
     generateRecord( recordObj:Object, curTime: Date):GenericRecord{
-        return new GenericRecord({...recordObj, validity: this.forValidity? recordObj["value"]: true}, curTime);
+        return super.generateRecord({...recordObj, eventName: this.eventName}, curTime);
+        //return new GenericRecord({...recordObj, validity: this.forValidity? recordObj["value"]: true}, curTime);
     }
-
+    
 }

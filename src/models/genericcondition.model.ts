@@ -6,10 +6,11 @@ import { GenericEvaluable } from "./genericevaluable.model";
 
 export class GenericCondition extends GenericEvaluable {
     forValidity: boolean = false;
-    type: string = "generic";
+    resultType: string = "generic";
 
     generateRecord( recordObj:Object, curTime: Date):GenericRecord{
-        return new GenericRecord({...recordObj, conditionType: this.type, validity: this.forValidity? recordObj["value"]: true}, curTime);
+        let basis = {name: this.name, resultType: this.resultType, validity: this.forValidity? recordObj["value"]: true};
+        return new GenericRecord({...basis, ...recordObj}, curTime);
     }
 
 }

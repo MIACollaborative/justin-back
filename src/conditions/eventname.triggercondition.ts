@@ -23,7 +23,7 @@ export default class EventNameTriggerCondition extends GenericEventCondition {
         console.log(`[Condition]`, this.getName(), `eventName`, this.#eventName, "event.name", event.name);
         let result = this.#eventName == event.name;
 
-        return this.generateRecord({value: result, conditionName: this.name, eventName: this.#eventName}, event.providedTimestamp);
+        return this.generateRecord({value: result, eventName: this.#eventName}, event.providedTimestamp);
     }
 
     static fromSpec(spec: {eventName: string, forValidity: boolean}): GenericCondition {

@@ -67,8 +67,9 @@ export class SomeConditionArbiter extends GenericConditionArbiter {
 
         validity = GeneralUtility.reduceBooleanArray(validityList, "or");
 
+        return this.generateRecord({value: result, validity: validity,  recordList: conditionEvaluationResultList}, event.providedTimestamp);
 
-        return new GenericRecord({value: result, validity: validity,  recordList: conditionEvaluationResultList}, event.providedTimestamp);
+        //return new GenericRecord({value: result, validity: validity,  recordList: conditionEvaluationResultList}, event.providedTimestamp);
     }
 
     setMetaObject(metaObject:{evaluableList: GenericCondition[]}){

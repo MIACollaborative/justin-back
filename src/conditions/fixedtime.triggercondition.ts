@@ -69,7 +69,7 @@ export default class FixedTimeTriggerCondition extends GenericEventCondition {
 
         let result = GeneralUtility.areDatesMatchedUpByGranularity(curTime, targetTime, "minute");
 
-        return this.generateRecord({ value: result, conditionName: this.name, targetTimeString: this.#targetTimeString }, curTime);
+        return this.generateRecord({ value: result, targetTimeString: this.#targetTimeString }, curTime);
     }
 
     static fromSpec(spec: { targetTimeString: string, forValidity: boolean }): GenericCondition {

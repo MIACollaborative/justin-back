@@ -6,7 +6,7 @@ import { GenericCondition } from "./genericcondition.model";
 import { GenericArbiter } from "./genericarbiter.model";
 
 export class GenericConditionArbiter extends GenericCondition {
-    type: string = "composite";
+    resultType: string = "composite";
 
     async evaluate(user:User, event:GenericEvent, metaObject:{evaluableList: GenericCondition[]}):Promise<GenericRecord>{
         // origianl generic version
