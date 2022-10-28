@@ -5,13 +5,12 @@ This repository is under development and should not be used in a production envi
 
 ## Overview
 
-
 - Used for creating backend code for several research projects, including MiWaves.
 - Runnable as a backend serverside script (not just a library).
 - Reusable components will be gradually extracted into the form of a library/package.
 
 
-# Example of .env file
+## Example of .env file
 
 ```bash
 
